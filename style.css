@@ -466,6 +466,19 @@ a.social-icon-btn:hover {
   opacity: 1;
 }
 
+a.cv-btn {
+  width: auto;
+  padding: 0 16px;
+  gap: 8px;
+}
+
+a.cv-btn span {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-primary);
+  letter-spacing: 0.05em;
+}
+
 .cv-download {
   display: inline-flex;
   align-items: center;
