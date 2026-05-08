@@ -88,21 +88,16 @@
 
 
 
-      <a class="project-card" href="https://www.instagram.com/p/DN739C6jCpX/" target="_blank" rel="noopener">
+      <div class="project-card multi-card" onclick="this.querySelector('.multi-popup').classList.toggle('show')">
         <div class="project-thumb">
           <img src="photos/ig-1.jpg" alt="EDC Festival 2025" loading="lazy" />
         </div>
-        <div class="project-info"><span class="project-title">EDC Festival 2025</span></div>
-      </a>
-
-
-
-      <a class="project-card" href="https://www.instagram.com/p/DLj1Y_oMjzl/" target="_blank" rel="noopener">
-        <div class="project-thumb">
-          <img src="photos/ig-2.jpg" alt="WRKN x Vessel" loading="lazy" />
+        <div class="project-info"><span class="project-title">EDC Festival 2025 / WRKN x Vessel</span></div>
+        <div class="multi-popup" onclick="event.stopPropagation()">
+          <a href="https://www.instagram.com/p/DN739C6jCpX/" target="_blank" rel="noopener">EDC Festival 2025 ↗</a>
+          <a href="https://www.instagram.com/p/DLj1Y_oMjzl/" target="_blank" rel="noopener">WRKN x Vessel ↗</a>
         </div>
-        <div class="project-info"><span class="project-title">WRKN x Vessel</span></div>
-      </a>
+      </div>
 
 
       <a class="project-card" href="https://www.instagram.com/stories/highlights/18398306191188387/" target="_blank" rel="noopener">
@@ -437,6 +432,11 @@ document.addEventListener('click', function(e) {
   if (nav.classList.contains('open') && !nav.contains(e.target) && !toggle.contains(e.target)) {
     nav.classList.remove('open');
   }
+  document.querySelectorAll('.multi-popup.show').forEach(function(p) {
+    if (!p.parentElement.contains(e.target)) {
+      p.classList.remove('show');
+    }
+  });
 });
 </script>
 </body>
