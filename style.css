@@ -436,7 +436,8 @@ a.job-link:hover {
   opacity: 1;
 }
 
-a.social-icon-btn {
+a.social-icon-btn,
+button.social-icon-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -450,29 +451,34 @@ a.social-icon-btn {
   text-decoration: none;
 }
 
-a.social-icon-btn svg {
+a.social-icon-btn svg,
+button.social-icon-btn svg {
   width: 24px;
   height: 24px;
 }
 
-a.social-icon-btn i {
+a.social-icon-btn i,
+button.social-icon-btn i {
   font-size: 24px;
 }
 
-a.social-icon-btn:hover {
+a.social-icon-btn:hover,
+button.social-icon-btn:hover {
   border-color: #444;
   background: #222222;
   color: #FFFFFF;
   opacity: 1;
 }
 
-a.cv-btn {
+a.cv-btn,
+button.cv-btn {
   width: auto;
   padding: 0 16px;
   gap: 8px;
 }
 
-a.cv-btn span {
+a.cv-btn span,
+button.cv-btn span {
   font-size: 13px;
   font-weight: 600;
   font-family: var(--font-primary);
