@@ -565,6 +565,114 @@ a.cv-btn span {
   object-fit: cover;
 }
 
+/* CONTACT MODAL */
+.contact-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact-modal.open {
+  display: flex;
+}
+
+.contact-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+}
+
+.contact-form-wrap {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  width: 90%;
+  max-width: 420px;
+  z-index: 1;
+}
+
+.contact-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 28px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.contact-close:hover { color: var(--text); }
+
+.contact-form-wrap form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contact-form-wrap input[type="text"],
+.contact-form-wrap input[type="email"],
+.contact-form-wrap textarea {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-size: 14px;
+  font-family: var(--font-secondary);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.contact-form-wrap input:focus,
+.contact-form-wrap textarea:focus {
+  border-color: var(--primary);
+}
+
+.contact-form-wrap textarea { resize: vertical; }
+
+.cv-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-family: var(--font-secondary);
+  cursor: pointer;
+}
+
+.cv-checkbox input { accent-color: var(--primary); }
+
+.contact-submit {
+  background: var(--primary);
+  color: #111;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-primary);
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.contact-submit:hover { opacity: 0.9; }
+
+.contact-success {
+  text-align: center;
+  color: var(--primary);
+  font-size: 14px;
+  margin-top: 16px;
+  font-family: var(--font-secondary);
+}
+
 /* GALLERY */
 .gallery-grid {
   display: grid;
