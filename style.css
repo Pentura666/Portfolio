@@ -436,6 +436,27 @@ a.job-link:hover {
   opacity: 1;
 }
 
+.social-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: #FFFFFF;
+  transition: border-color 0.15s, background 0.15s;
+  text-decoration: none;
+}
+
+.social-icon-btn:hover {
+  border-color: #444;
+  background: #222222;
+  color: #FFFFFF;
+  opacity: 1;
+}
+
 /* GALLERY */
 .gallery-grid {
   display: grid;
