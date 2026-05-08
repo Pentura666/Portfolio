@@ -27,18 +27,11 @@
     .gallery-masonry-item:hover img {
       transform: scale(1.03);
     }
-    .gallery-placeholder-item {
-      break-inside: avoid;
-      margin-bottom: 8px;
-      border-radius: 4px;
-      overflow: hidden;
-      background: #111;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #444;
-      font-size: 12px;
-      font-family: 'Inter', sans-serif;
+    .gallery-loading {
+      text-align: center;
+      color: var(--text-muted, #888);
+      padding: 60px 0;
+      font-size: 14px;
     }
     @media (max-width: 900px) {
       .gallery-masonry { columns: 2; }
@@ -72,118 +65,51 @@
 
 <section class="section">
   <div class="container">
-    <!--
-      Add your photos to the photos/ folder and replace the placeholders below.
-      Naming: photos/photo-01.jpg, photos/photo-02.jpg, etc.
-      To add more photos, copy any <div class="gallery-masonry-item"> block.
-    -->
-    <div class="gallery-masonry">
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
-        <img src="photos/photo-01.jpg" alt="Photo 01" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-01.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/4;">
-        <img src="photos/photo-02.jpg" alt="Photo 02" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-02.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
-        <img src="photos/photo-03.jpg" alt="Photo 03" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-03.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
-        <img src="photos/photo-04.jpg" alt="Photo 04" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-04.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 1/1;">
-        <img src="photos/photo-05.jpg" alt="Photo 05" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-05.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
-        <img src="photos/photo-06.jpg" alt="Photo 06" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-06.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/4;">
-        <img src="photos/photo-07.jpg" alt="Photo 07" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-07.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
-        <img src="photos/photo-08.jpg" alt="Photo 08" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-08.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 1/1;">
-        <img src="photos/photo-09.jpg" alt="Photo 09" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-09.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
-        <img src="photos/photo-10.jpg" alt="Photo 10" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-10.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/4;">
-        <img src="photos/photo-11.jpg" alt="Photo 11" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-11.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
-        <img src="photos/photo-12.jpg" alt="Photo 12" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-12.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
-        <img src="photos/photo-13.jpg" alt="Photo 13" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-13.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 1/1;">
-        <img src="photos/photo-14.jpg" alt="Photo 14" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-14.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
-        <img src="photos/photo-15.jpg" alt="Photo 15" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-15.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/4;">
-        <img src="photos/photo-16.jpg" alt="Photo 16" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-16.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
-        <img src="photos/photo-17.jpg" alt="Photo 17" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-17.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
-        <img src="photos/photo-18.jpg" alt="Photo 18" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-18.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 1/1;">
-        <img src="photos/photo-19.jpg" alt="Photo 19" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-19.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
-        <img src="photos/photo-20.jpg" alt="Photo 20" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-20.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/4;">
-        <img src="photos/photo-21.jpg" alt="Photo 21" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-21.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
-        <img src="photos/photo-22.jpg" alt="Photo 22" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-22.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
-        <img src="photos/photo-23.jpg" alt="Photo 23" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-23.jpg</div>'" />
-      </div>
-
-      <div class="gallery-masonry-item" style="aspect-ratio: 1/1;">
-        <img src="photos/photo-24.jpg" alt="Photo 24" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-24.jpg</div>'" />
-      </div>
-
-    </div>
+    <div class="gallery-masonry" id="gallery"></div>
+    <div class="gallery-loading" id="gallery-loading">Loading photos...</div>
   </div>
 </section>
 
 <footer>
   <div class="container">
-    <p>© 2026 Igor Nikitchenko. All rights reserved.</p>
+    <p>&copy; 2026 Igor Nikitchenko. All rights reserved.</p>
   </div>
 </footer>
+
+<script>
+(function() {
+  var gallery = document.getElementById('gallery');
+  var loading = document.getElementById('gallery-loading');
+  var repo = 'Pentura666/Portfolio';
+  var folder = 'photos';
+  var imageExts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+
+  fetch('https://api.github.com/repos/' + repo + '/contents/' + folder)
+    .then(function(r) { return r.json(); })
+    .then(function(files) {
+      loading.style.display = 'none';
+      files
+        .filter(function(f) {
+          var ext = f.name.split('.').pop().toLowerCase();
+          return imageExts.indexOf(ext) !== -1;
+        })
+        .sort(function(a, b) { return a.name.localeCompare(b.name); })
+        .forEach(function(f) {
+          var item = document.createElement('div');
+          item.className = 'gallery-masonry-item';
+          var img = document.createElement('img');
+          img.src = 'photos/' + f.name;
+          img.alt = f.name;
+          img.loading = 'lazy';
+          item.appendChild(img);
+          gallery.appendChild(item);
+        });
+    })
+    .catch(function() {
+      loading.textContent = 'Could not load gallery.';
+    });
+})();
+</script>
 
 </body>
 </html>
