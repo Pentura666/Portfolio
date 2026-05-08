@@ -506,6 +506,10 @@ a.cv-btn span {
 .multi-card {
   cursor: pointer;
   position: relative;
+  overflow: visible !important;
+}
+
+.multi-card .project-thumb {
   overflow: visible;
 }
 

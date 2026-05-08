@@ -88,12 +88,12 @@
 
 
 
-      <div class="project-card multi-card" onclick="this.querySelector('.multi-popup').classList.toggle('show')">
+      <div class="project-card multi-card" id="multi-edc">
         <div class="project-thumb">
           <img src="photos/ig-1.jpg" alt="EDC Festival 2025" loading="lazy" />
         </div>
         <div class="project-info"><span class="project-title">EDC Festival 2025 / WRKN x Vessel</span></div>
-        <div class="multi-popup" onclick="event.stopPropagation()">
+        <div class="multi-popup" id="popup-edc">
           <a href="https://www.instagram.com/p/DN739C6jCpX/" target="_blank" rel="noopener"><img src="photos/ig-1.jpg" alt="" />EDC Festival 2025 ↗</a>
           <a href="https://www.instagram.com/p/DLj1Y_oMjzl/" target="_blank" rel="noopener"><img src="photos/ig-2.jpg" alt="" />WRKN x Vessel ↗</a>
         </div>
@@ -432,6 +432,19 @@ document.addEventListener('click', function(e) {
   if (nav.classList.contains('open') && !nav.contains(e.target) && !toggle.contains(e.target)) {
     nav.classList.remove('open');
   }
+});
+
+document.querySelectorAll('.multi-card').forEach(function(card) {
+  var popup = card.querySelector('.multi-popup');
+  card.addEventListener('click', function(e) {
+    if (popup.contains(e.target)) return;
+    e.preventDefault();
+    e.stopPropagation();
+    popup.classList.toggle('show');
+  });
+});
+
+document.addEventListener('click', function(e) {
   document.querySelectorAll('.multi-popup.show').forEach(function(p) {
     if (!p.parentElement.contains(e.target)) {
       p.classList.remove('show');
