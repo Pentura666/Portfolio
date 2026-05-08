@@ -503,12 +503,10 @@ a.cv-btn span {
 }
 
 /* MULTI-LINK CARD */
-.multi-wrap {
-  position: relative;
-}
-
 .multi-card {
   cursor: pointer;
+  position: relative;
+  overflow: visible !important;
 }
 
 .multi-popup {
