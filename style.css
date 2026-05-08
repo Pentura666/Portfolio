@@ -550,6 +550,26 @@ footer p {
   font-size: 15px;
 }
 
+/* HAMBURGER BUTTON */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
 /* RESPONSIVE */
 @media (max-width: 900px) {
   .projects-grid,
@@ -558,13 +578,72 @@ footer p {
   .hero h1 { font-size: 48px; }
   .projects-header h2 { font-size: 40px; }
   .container { padding: 0 24px; }
+  .section { padding: 60px 0; }
+  .hero { padding: 60px 0; }
+  .hero-content { padding: 24px 0; }
 }
 
 @media (max-width: 600px) {
-  .projects-grid,
-  .press-grid,
-  .gallery-grid { grid-template-columns: 1fr; }
+  /* NAV: hamburger menu */
+  .nav-toggle { display: flex; }
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    padding: 16px 24px;
+    gap: 0;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links li { list-style: none; }
+  .nav-links a {
+    display: block;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 16px;
+  }
+  .nav-links li:last-child a { border-bottom: none; }
+  nav { position: relative; }
+
+  /* HERO */
   .hero h1 { font-size: 32px; }
-  .projects-header h2 { font-size: 32px; }
-  .nav-links { gap: 16px; }
+  .hero-subtitle { font-size: 14px; letter-spacing: 0.1em; margin-bottom: 16px; }
+  .hero-avatar-placeholder { width: 100px; height: 100px; font-size: 32px; }
+  .hero-bio { font-size: 14px; }
+  .hero-content { gap: 16px; }
+  .hero-sep { margin: 0 auto 16px; }
+  .hero { padding: 40px 0; }
+
+  /* SECTIONS */
+  .section { padding: 40px 0; }
+  .section > .container { gap: 24px; }
+  .container { padding: 0 16px; }
+
+  /* PROJECTS */
+  .projects-grid { grid-template-columns: 1fr; gap: 16px; }
+  .projects-header h2 { font-size: 28px; }
+  .projects-header p { font-size: 14px; }
+
+  /* PRESS */
+  .press-grid { grid-template-columns: 1fr; gap: 16px; }
+  .press-card { padding: 16px; }
+
+  /* CV */
+  .cv-grid { grid-template-columns: 1fr; gap: 32px; }
+  .cv-section-label { font-size: 18px; }
+  .job-header { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .social-row { flex-direction: column; }
+  .social-btn { justify-content: center; }
+
+  /* PAGE HEADER */
+  .page-header { padding: 32px 0 24px; }
+  .page-header h1 { font-size: 28px; }
+
+  /* FOOTER */
+  footer { padding: 16px 0; }
+  footer p { font-size: 12px; }
 }

@@ -12,12 +12,15 @@
 <nav>
   <div class="container nav-inner">
     <span class="nav-logo">PNTR.LCHT</span>
+    <button class="nav-toggle" aria-label="Menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
     <ul class="nav-links">
-      <li><a href="#home" class="active">Home</a></li>
-      <li><a href="#projects">Projects</a></li>
+      <li><a href="#home" class="active" onclick="document.querySelector('.nav-links').classList.remove('open')">Home</a></li>
+      <li><a href="#projects" onclick="document.querySelector('.nav-links').classList.remove('open')">Projects</a></li>
       <li><a href="gallery.html">Gallery</a></li>
       <li><a href="press.html">Press</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#contact" onclick="document.querySelector('.nav-links').classList.remove('open')">Contact</a></li>
     </ul>
   </div>
 </nav>
