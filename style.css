@@ -469,15 +469,22 @@ a.social-icon-btn:hover {
 .cv-download {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  color: var(--text-muted);
-  font-size: 13px;
+  gap: 8px;
+  padding: 8px 16px;
+  color: var(--text);
+  font-size: 14px;
   font-weight: 500;
   text-decoration: none;
   font-family: var(--font-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  transition: border-color 0.15s, background 0.15s;
 }
 
 .cv-download:hover {
+  border-color: #444;
+  background: #222222;
   color: var(--text);
   opacity: 1;
 }
