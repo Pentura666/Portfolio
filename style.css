@@ -513,9 +513,9 @@ a.cv-btn span {
 
 .multi-popup {
   position: absolute;
-  bottom: 100%;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%) scale(0.95);
+  transform: translate(-50%, -50%) scale(0.95);
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -535,7 +535,7 @@ a.cv-btn span {
 
 .multi-popup.show {
   opacity: 1;
-  transform: translateX(-50%) scale(1);
+  transform: translate(-50%, -50%) scale(1);
   pointer-events: auto;
 }
 
