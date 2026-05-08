@@ -455,6 +455,10 @@ a.social-icon-btn svg {
   height: 24px;
 }
 
+a.social-icon-btn i {
+  font-size: 24px;
+}
+
 a.social-icon-btn:hover {
   border-color: #444;
   background: #222222;
