@@ -213,11 +213,13 @@ nav {
 .project-card:hover .play-icon { background: rgba(0,0,0,0.4); }
 
 .play-icon svg {
-  opacity: 0;
+  opacity: 0.7;
   transition: opacity 0.2s;
 }
 
 .project-card:hover .play-icon svg { opacity: 1; }
+
+.video-card { cursor: pointer; }
 
 .project-info {
   padding: 16px;
