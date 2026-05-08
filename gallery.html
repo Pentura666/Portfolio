@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery — Igor Nikitchenko</title>
+  <meta name="description" content="Photo gallery — Igor Nikitchenko Lighting Designer" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .gallery-masonry {
+      columns: 3;
+      column-gap: 8px;
+    }
+    .gallery-masonry-item {
+      break-inside: avoid;
+      margin-bottom: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #111;
+      display: block;
+    }
+    .gallery-masonry-item img {
+      width: 100%;
+      display: block;
+      transition: transform 0.3s;
+    }
+    .gallery-masonry-item:hover img {
+      transform: scale(1.03);
+    }
+    .gallery-placeholder-item {
+      break-inside: avoid;
+      margin-bottom: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #444;
+      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+    }
+    @media (max-width: 900px) {
+      .gallery-masonry { columns: 2; }
+    }
+    @media (max-width: 500px) {
+      .gallery-masonry { columns: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">Igor Nikitchenko</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#projects">Projects</a></li>
+      <li><a href="gallery.html" class="active">Gallery</a></li>
+      <li><a href="press.html">Press</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>Gallery</h1>
+    <p>Photography from productions and installations</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <!--
+      Add your photos to the photos/ folder and replace the placeholders below.
+      Naming: photos/photo-01.jpg, photos/photo-02.jpg, etc.
+      To add more photos, copy any <div class="gallery-masonry-item"> block.
+    -->
+    <div class="gallery-masonry">
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
+        <img src="photos/photo-01.jpg" alt="Photo 01" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-01.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/4;">
+        <img src="photos/photo-02.jpg" alt="Photo 02" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-02.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
+        <img src="photos/photo-03.jpg" alt="Photo 03" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-03.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
+        <img src="photos/photo-04.jpg" alt="Photo 04" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-04.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 1/1;">
+        <img src="photos/photo-05.jpg" alt="Photo 05" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-05.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
+        <img src="photos/photo-06.jpg" alt="Photo 06" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-06.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/4;">
+        <img src="photos/photo-07.jpg" alt="Photo 07" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-07.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
+        <img src="photos/photo-08.jpg" alt="Photo 08" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-08.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 1/1;">
+        <img src="photos/photo-09.jpg" alt="Photo 09" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-09.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
+        <img src="photos/photo-10.jpg" alt="Photo 10" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-10.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/4;">
+        <img src="photos/photo-11.jpg" alt="Photo 11" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-11.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
+        <img src="photos/photo-12.jpg" alt="Photo 12" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-12.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
+        <img src="photos/photo-13.jpg" alt="Photo 13" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-13.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 1/1;">
+        <img src="photos/photo-14.jpg" alt="Photo 14" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-14.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
+        <img src="photos/photo-15.jpg" alt="Photo 15" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-15.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/4;">
+        <img src="photos/photo-16.jpg" alt="Photo 16" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-16.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
+        <img src="photos/photo-17.jpg" alt="Photo 17" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-17.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
+        <img src="photos/photo-18.jpg" alt="Photo 18" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-18.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 1/1;">
+        <img src="photos/photo-19.jpg" alt="Photo 19" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-19.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
+        <img src="photos/photo-20.jpg" alt="Photo 20" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-20.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/4;">
+        <img src="photos/photo-21.jpg" alt="Photo 21" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-21.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
+        <img src="photos/photo-22.jpg" alt="Photo 22" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-22.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 3/2;">
+        <img src="photos/photo-23.jpg" alt="Photo 23" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-23.jpg</div>'" />
+      </div>
+
+      <div class="gallery-masonry-item" style="aspect-ratio: 1/1;">
+        <img src="photos/photo-24.jpg" alt="Photo 24" loading="lazy" onerror="this.parentNode.innerHTML='<div style=&quot;padding:40px;text-align:center;color:#444;font-size:12px;font-family:Inter,sans-serif;&quot;>photo-24.jpg</div>'" />
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>© 2026 Igor Nikitchenko. All rights reserved.</p>
+  </div>
+</footer>
+
+</body>
+</html>
