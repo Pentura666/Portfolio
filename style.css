@@ -436,12 +436,12 @@ a.job-link:hover {
   opacity: 1;
 }
 
-.social-icon-btn {
+a.social-icon-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -450,7 +450,12 @@ a.job-link:hover {
   text-decoration: none;
 }
 
-.social-icon-btn:hover {
+a.social-icon-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+a.social-icon-btn:hover {
   border-color: #444;
   background: #222222;
   color: #FFFFFF;
