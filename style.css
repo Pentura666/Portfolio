@@ -503,27 +503,19 @@ a.cv-btn span {
 }
 
 /* MULTI-LINK CARD */
-.multi-card {
+.multi-wrap {
+  position: relative;
+}
+
+.multi-wrap .project-card {
   cursor: pointer;
-  position: relative;
-  overflow: visible !important;
-}
-
-.multi-card .project-thumb {
-  overflow: visible;
-}
-
-.multi-card .popup-anchor {
-  position: relative;
-  height: 0;
-  overflow: visible;
 }
 
 .multi-popup {
   position: absolute;
-  bottom: 0;
+  bottom: 100%;
   left: 50%;
-  transform: translateX(-50%) translateY(-100%) scale(0.95);
+  transform: translateX(-50%) scale(0.95);
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -543,7 +535,7 @@ a.cv-btn span {
 
 .multi-popup.show {
   opacity: 1;
-  transform: translateX(-50%) translateY(-100%) scale(1);
+  transform: translateX(-50%) scale(1);
   pointer-events: auto;
 }
 

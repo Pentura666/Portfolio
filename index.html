@@ -88,15 +88,17 @@
 
 
 
-      <div class="project-card multi-card" id="multi-edc">
-        <div class="project-thumb">
-          <img src="photos/ig-1.jpg" alt="EDC Festival 2025" loading="lazy" />
-        </div>
-        <div class="project-info"><span class="project-title">EDC Festival 2025 / WRKN x Vessel</span></div>
-        <div class="popup-anchor"><div class="multi-popup" id="popup-edc">
+      <div class="multi-wrap">
+        <a class="project-card multi-card" id="multi-edc" href="#" onclick="return false;">
+          <div class="project-thumb">
+            <img src="photos/ig-1.jpg" alt="EDC Festival 2025" loading="lazy" />
+          </div>
+          <div class="project-info"><span class="project-title">EDC Festival 2025 / WRKN x Vessel</span></div>
+        </a>
+        <div class="multi-popup" id="popup-edc">
           <a href="https://www.instagram.com/p/DN739C6jCpX/" target="_blank" rel="noopener"><img src="photos/ig-1.jpg" alt="" />EDC Festival 2025 ↗</a>
           <a href="https://www.instagram.com/p/DLj1Y_oMjzl/" target="_blank" rel="noopener"><img src="photos/ig-2.jpg" alt="" />WRKN x Vessel ↗</a>
-        </div></div>
+        </div>
       </div>
 
 
@@ -433,14 +435,14 @@ document.addEventListener('click', function(e) {
     nav.classList.remove('open');
   }
 
+  if (e.target.closest('.multi-popup')) return;
+
   var clickedCard = e.target.closest('.multi-card');
   if (clickedCard) {
-    var popup = clickedCard.querySelector('.multi-popup');
-    if (!popup.contains(e.target)) {
-      e.preventDefault();
-      popup.classList.toggle('show');
-      return;
-    }
+    var wrap = clickedCard.closest('.multi-wrap');
+    var popup = wrap.querySelector('.multi-popup');
+    e.preventDefault();
+    popup.classList.toggle('show');
     return;
   }
 
