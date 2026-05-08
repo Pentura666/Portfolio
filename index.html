@@ -279,5 +279,14 @@
   </div>
 </footer>
 
+<script>
+document.addEventListener('click', function(e) {
+  var nav = document.querySelector('.nav-links');
+  var toggle = document.querySelector('.nav-toggle');
+  if (nav.classList.contains('open') && !nav.contains(e.target) && !toggle.contains(e.target)) {
+    nav.classList.remove('open');
+  }
+});
+</script>
 </body>
 </html>
