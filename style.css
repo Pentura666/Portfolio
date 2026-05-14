@@ -86,7 +86,9 @@ nav {
   border-bottom: 1px solid var(--border);
   position: relative;
   overflow: hidden;
-  background-image: url('photos/hero-bg.png');
+  background-image: url('photos/hero-bg.jpg');
+  background-image: -webkit-image-set(url('photos/hero-bg.webp') 1x, url('photos/hero-bg.jpg') 1x);
+  background-image: image-set(url('photos/hero-bg.webp') type('image/webp'), url('photos/hero-bg.jpg') type('image/jpeg'));
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
