@@ -96,7 +96,7 @@ nav {
   right: 0;
   top: 200px;
   width: 100%;
-  aspect-ratio: 2616 / 1440;
+  aspect-ratio: 2752 / 1352;
   transform: translateY(-50%);
   background-image: url('photos/hero-bg.jpg');
   background-image: -webkit-image-set(url('photos/hero-bg.webp') 1x, url('photos/hero-bg.jpg') 1x);
