@@ -92,17 +92,12 @@ nav {
 .hero::before {
   content: '';
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 200px;
-  width: 100%;
-  aspect-ratio: 2752 / 1352;
-  transform: translateY(-50%);
+  inset: 0;
   background-image: url('photos/hero-bg.jpg');
   background-image: -webkit-image-set(url('photos/hero-bg.webp') 1x, url('photos/hero-bg.jpg') 1x);
   background-image: image-set(url('photos/hero-bg.webp') type('image/webp'), url('photos/hero-bg.jpg') type('image/jpeg'));
-  background-size: cover;
-  background-position: center;
+  background-size: auto 200%;
+  background-position: 55% -600px;
   background-repeat: no-repeat;
   pointer-events: none;
   z-index: 0;
@@ -868,7 +863,7 @@ footer p {
   .section { padding: 60px 0; }
   .hero { padding: 60px 0; }
   .hero-content { padding: 24px 0; }
-  .hero::before { top: 164px; }
+  .hero::before { background-position: 55% -500px; }
 }
 
 @media (max-width: 600px) {
@@ -905,7 +900,7 @@ footer p {
   .hero-content { gap: 16px; }
   .hero-sep { margin: 0 auto 16px; }
   .hero { padding: 40px 0; }
-  .hero::before { top: 114px; min-height: 100%; aspect-ratio: auto; bottom: 0; transform: none; background-size: cover; }
+  .hero::before { background-position: 55% -350px; background-size: auto 200%; }
 
   /* SECTIONS */
   .section { padding: 40px 0; }
