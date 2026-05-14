@@ -109,7 +109,7 @@ nav {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 200px, transparent 80px, rgba(0,0,0,0.55) 240px, rgba(0,0,0,0.8) 100%);
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.7) 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -866,7 +866,6 @@ footer p {
   .hero { padding: 60px 0; }
   .hero-content { padding: 24px 0; }
   .hero::before { top: 164px; width: 800px; height: 800px; }
-  .hero::after { background: radial-gradient(circle at 50% 164px, transparent 70px, rgba(0,0,0,0.55) 200px, rgba(0,0,0,0.8) 100%); }
 }
 
 @media (max-width: 600px) {
@@ -904,7 +903,6 @@ footer p {
   .hero-sep { margin: 0 auto 16px; }
   .hero { padding: 40px 0; }
   .hero::before { top: 114px; width: 600px; height: 600px; }
-  .hero::after { background: radial-gradient(circle at 50% 114px, transparent 50px, rgba(0,0,0,0.55) 150px, rgba(0,0,0,0.8) 100%); }
 
   /* SECTIONS */
   .section { padding: 40px 0; }
