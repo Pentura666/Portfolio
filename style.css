@@ -128,9 +128,9 @@ nav {
   z-index: 3;
 }
 .hero-bg-item:hover img {
-  filter: grayscale(0) brightness(1);
+  filter: grayscale(0) brightness(1.2);
   opacity: 1;
-  transform: scale(1.08);
+  transform: scale(1.16);
 }
 
 /* dark vignette so portrait + text stay readable over the grid */
