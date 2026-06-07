@@ -99,6 +99,7 @@ nav {
   height: 160px;
   border-radius: 50%;
   object-fit: cover;
+  object-position: center 25%;
   border: 2px solid var(--border);
 }
 
