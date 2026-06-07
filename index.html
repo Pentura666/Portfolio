@@ -411,12 +411,22 @@
 </footer>
 
 <script>
-/* hero background: live masonry of gallery photos, grayscale until hover */
+/* hero background: live photo-wall of gallery photos, grayscale until hover,
+   fully tiles the hero and slowly auto-cycles tiles over time */
 (function() {
   var bg = document.getElementById('hero-bg');
   if (!bg) return;
   var repo = 'Pentura666/Portfolio';
   var imageExts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+
+  function shuffle(a) {
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
   fetch('https://api.github.com/repos/' + repo + '/contents/photos')
     .then(function(r) { return r.json(); })
     .then(function(files) {
@@ -427,19 +437,42 @@
         })
         .map(function(f) { return f.name; });
       if (!names.length) return;
-      /* repeat list so the grid fills the hero on wide screens */
-      var tiles = names.concat(names).slice(0, 40);
-      tiles.forEach(function(name) {
+      shuffle(names);
+
+      /* enough tiles to overflow-fill the hero on wide screens (clipped) */
+      var hero = bg.parentElement;
+      var cell = window.innerWidth <= 700 ? 94 : 156;
+      var cols = Math.ceil(window.innerWidth / cell);
+      var rows = Math.ceil((hero.offsetHeight || 700) / cell) + 1;
+      var count = cols * rows;
+
+      var imgs = [];
+      for (var i = 0; i < count; i++) {
         var item = document.createElement('div');
         item.className = 'hero-bg-item';
         var img = document.createElement('img');
-        img.src = 'photos/' + name;
+        img.src = 'photos/' + names[i % names.length];
         img.alt = '';
         img.loading = 'lazy';
         item.appendChild(img);
         bg.appendChild(item);
-      });
+        imgs.push({ item: item, img: img });
+      }
       requestAnimationFrame(function() { bg.classList.add('loaded'); });
+
+      /* slow auto-cycle: fade a random tile to a fresh random photo */
+      var ni = 0;
+      setInterval(function() {
+        if (document.hidden) return;
+        var slot = imgs[Math.floor(Math.random() * imgs.length)];
+        if (slot.item.matches(':hover')) return;
+        var name = names[ni++ % names.length];
+        slot.item.style.opacity = '0';
+        setTimeout(function() {
+          slot.img.src = 'photos/' + name;
+          slot.item.style.opacity = '1';
+        }, 900);
+      }, 2200);
     })
     .catch(function() {});
 })();
