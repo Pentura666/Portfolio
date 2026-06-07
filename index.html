@@ -427,6 +427,21 @@
     return a;
   }
 
+  var spanClasses = ['s-wide', 's-tall', 's-big'];
+  /* mostly 1x1, sprinkle bigger tiles for a masonry feel */
+  function randSpan() {
+    var r = Math.random();
+    if (r < 0.60) return '';
+    if (r < 0.78) return 's-wide';
+    if (r < 0.92) return 's-tall';
+    return 's-big';
+  }
+  function applySpan(item) {
+    item.classList.remove('s-wide', 's-tall', 's-big');
+    var c = randSpan();
+    if (c) item.classList.add(c);
+  }
+
   fetch('https://api.github.com/repos/' + repo + '/contents/photos')
     .then(function(r) { return r.json(); })
     .then(function(files) {
@@ -441,15 +456,17 @@
 
       /* enough tiles to overflow-fill the hero on wide screens (clipped) */
       var hero = bg.parentElement;
-      var cell = window.innerWidth <= 700 ? 94 : 156;
+      var cell = window.innerWidth <= 700 ? 96 : 116;
       var cols = Math.ceil(window.innerWidth / cell);
       var rows = Math.ceil((hero.offsetHeight || 700) / cell) + 1;
-      var count = cols * rows;
+      /* extra tiles: big/wide/tall spans eat space, dense flow needs surplus */
+      var count = Math.ceil(cols * rows * 1.5);
 
       var imgs = [];
       for (var i = 0; i < count; i++) {
         var item = document.createElement('div');
         item.className = 'hero-bg-item';
+        applySpan(item);
         var img = document.createElement('img');
         img.src = 'photos/' + names[i % names.length];
         img.alt = '';
@@ -470,6 +487,8 @@
         slot.item.style.opacity = '0';
         setTimeout(function() {
           slot.img.src = 'photos/' + name;
+          /* re-roll size while hidden so tiles grow/shrink over time */
+          applySpan(slot.item);
           slot.item.style.opacity = '1';
         }, 900);
       }, 2200);

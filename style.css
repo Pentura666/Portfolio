@@ -94,8 +94,9 @@ nav {
   inset: 0;
   z-index: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  grid-auto-rows: 150px;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  grid-auto-rows: 110px;
+  grid-auto-flow: dense;
   gap: 6px;
   padding: 6px;
   opacity: 0;
@@ -108,6 +109,10 @@ nav {
   opacity: 1;
   transition: opacity 0.9s ease;
 }
+/* masonry-style varied tile sizes */
+.hero-bg-item.s-wide  { grid-column: span 2; }
+.hero-bg-item.s-tall  { grid-row: span 2; }
+.hero-bg-item.s-big   { grid-column: span 2; grid-row: span 2; }
 .hero-bg-item img {
   width: 100%;
   height: 100%;
