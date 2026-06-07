@@ -94,8 +94,8 @@ nav {
   inset: 0;
   z-index: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  grid-auto-rows: 110px;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  grid-auto-rows: 170px;
   grid-auto-flow: dense;
   gap: 6px;
   padding: 6px;
@@ -108,6 +108,19 @@ nav {
   overflow: hidden;
   opacity: 1;
   transition: opacity 0.9s ease;
+  animation: heroFloat var(--fdur, 8s) ease-in-out var(--fdelay, 0s) infinite;
+  will-change: transform;
+}
+/* hold steady while hovering a tile */
+.hero-bg-item:hover { animation-play-state: paused; }
+
+@keyframes heroFloat {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(0, -7px, 0) scale(1.03); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg-item { animation: none; }
 }
 /* masonry-style varied tile sizes */
 .hero-bg-item.s-wide  { grid-column: span 2; }
@@ -932,7 +945,7 @@ footer p {
   .hero-content { gap: 16px; }
   .hero-sep { margin: 0 auto 16px; }
   .hero { padding: 40px 0; }
-  .hero-bg { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); grid-auto-rows: 90px; gap: 4px; padding: 4px; }
+  .hero-bg { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); grid-auto-rows: 120px; gap: 4px; padding: 4px; }
 
   /* SECTIONS */
   .section { padding: 40px 0; }

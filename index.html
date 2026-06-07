@@ -456,7 +456,7 @@
 
       /* enough tiles to overflow-fill the hero on wide screens (clipped) */
       var hero = bg.parentElement;
-      var cell = window.innerWidth <= 700 ? 96 : 116;
+      var cell = window.innerWidth <= 700 ? 124 : 176;
       var cols = Math.ceil(window.innerWidth / cell);
       var rows = Math.ceil((hero.offsetHeight || 700) / cell) + 1;
       /* extra tiles: big/wide/tall spans eat space, dense flow needs surplus */
@@ -467,6 +467,9 @@
         var item = document.createElement('div');
         item.className = 'hero-bg-item';
         applySpan(item);
+        /* phase the float per tile so they drift out of sync */
+        item.style.setProperty('--fdur', (6 + Math.random() * 6).toFixed(2) + 's');
+        item.style.setProperty('--fdelay', (-Math.random() * 8).toFixed(2) + 's');
         var img = document.createElement('img');
         img.src = 'photos/' + names[i % names.length];
         img.alt = '';
@@ -487,8 +490,6 @@
         slot.item.style.opacity = '0';
         setTimeout(function() {
           slot.img.src = 'photos/' + name;
-          /* re-roll size while hidden so tiles grow/shrink over time */
-          applySpan(slot.item);
           slot.item.style.opacity = '1';
         }, 900);
       }, 2200);
