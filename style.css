@@ -95,8 +95,8 @@ nav {
 }
 
 .hero-avatar {
-  width: 160px;
-  height: 160px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   object-fit: cover;
   object-position: center 25%;
@@ -865,7 +865,7 @@ footer p {
   /* HERO */
   .hero h1 { font-size: 32px; }
   .hero-subtitle { font-size: 14px; letter-spacing: 0.1em; margin-bottom: 16px; }
-  .hero-avatar-placeholder { width: 100px; height: 100px; font-size: 32px; }
+  .hero-avatar, .hero-avatar-placeholder { width: 120px; height: 120px; font-size: 32px; }
   .hero-bio { font-size: 14px; }
   .hero-content { gap: 16px; }
   .hero-sep { margin: 0 auto 16px; }
