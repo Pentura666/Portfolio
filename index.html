@@ -29,6 +29,8 @@
 
 <!-- HERO -->
 <section class="hero" id="home">
+  <div class="hero-bg" id="hero-bg" aria-hidden="true"></div>
+  <div class="hero-overlay" aria-hidden="true"></div>
   <div class="container">
     <div class="hero-content">
       <img class="hero-avatar" src="portrait.jpg" alt="Igor Nikitchenko" />
@@ -409,6 +411,39 @@
 </footer>
 
 <script>
+/* hero background: live masonry of gallery photos, grayscale until hover */
+(function() {
+  var bg = document.getElementById('hero-bg');
+  if (!bg) return;
+  var repo = 'Pentura666/Portfolio';
+  var imageExts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+  fetch('https://api.github.com/repos/' + repo + '/contents/photos')
+    .then(function(r) { return r.json(); })
+    .then(function(files) {
+      var names = files
+        .filter(function(f) {
+          var ext = f.name.split('.').pop().toLowerCase();
+          return imageExts.indexOf(ext) !== -1;
+        })
+        .map(function(f) { return f.name; });
+      if (!names.length) return;
+      /* repeat list so the grid fills the hero on wide screens */
+      var tiles = names.concat(names).slice(0, 40);
+      tiles.forEach(function(name) {
+        var item = document.createElement('div');
+        item.className = 'hero-bg-item';
+        var img = document.createElement('img');
+        img.src = 'photos/' + name;
+        img.alt = '';
+        img.loading = 'lazy';
+        item.appendChild(img);
+        bg.appendChild(item);
+      });
+      requestAnimationFrame(function() { bg.classList.add('loaded'); });
+    })
+    .catch(function() {});
+})();
+
 document.addEventListener('click', function(e) {
   var nav = document.querySelector('.nav-links');
   var toggle = document.querySelector('.nav-toggle');
