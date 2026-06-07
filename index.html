@@ -468,8 +468,8 @@
         item.className = 'hero-bg-item';
         applySpan(item);
         /* phase the float per tile so they drift out of sync */
-        item.style.setProperty('--fdur', (6 + Math.random() * 6).toFixed(2) + 's');
-        item.style.setProperty('--fdelay', (-Math.random() * 8).toFixed(2) + 's');
+        item.style.setProperty('--fdur', (5 + Math.random() * 4).toFixed(2) + 's');
+        item.style.setProperty('--fdelay', (-Math.random() * 9).toFixed(2) + 's');
         var img = document.createElement('img');
         img.src = 'photos/' + names[i % names.length];
         img.alt = '';
