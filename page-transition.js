@@ -22,6 +22,28 @@
     window.addEventListener('load', function () { jump(); setTimeout(function () { root.style.scrollBehavior = ''; }, 100); });
   }
 
+  // ---- ?vtlog : on-phone log of what each page change did (for checking transitions on a real device) ----
+  var LOG = [], showLog = false;
+  try {
+    if (/[?&]vtlog(=|&|$)/.test(location.search)) sessionStorage.setItem('vtlog', '1');
+    showLog = sessionStorage.getItem('vtlog') === '1';
+    LOG = JSON.parse(sessionStorage.getItem('vtlogData') || '[]');
+  } catch (_) {}
+  function log(msg) {
+    if (!showLog) return;
+    LOG.push(new Date().toTimeString().slice(0, 8) + ' ' + location.pathname.split('/').pop() + ': ' + msg);
+    LOG = LOG.slice(-12);
+    try { sessionStorage.setItem('vtlogData', JSON.stringify(LOG)); } catch (_) {}
+    var p = document.getElementById('vtlog');
+    if (!p && document.body) {
+      p = document.createElement('pre'); p.id = 'vtlog';
+      p.style.cssText = 'position:fixed;left:6px;right:6px;bottom:6px;z-index:2147483646;margin:0;padding:8px;max-height:40vh;overflow:auto;font:10px/1.35 ui-monospace,Menlo,monospace;color:#ffb347;background:rgba(0,0,0,.88);border:1px solid #ff8400;border-radius:8px;white-space:pre-wrap;pointer-events:none';
+      document.body.appendChild(p);
+    }
+    if (p) p.textContent = LOG.join(String.fromCharCode(10));
+  }
+  if (showLog) document.addEventListener('DOMContentLoaded', function () { log('loaded (' + (/iPhone|iPad/.test(navigator.userAgent) ? 'iOS ' : '') + ('onpagereveal' in window ? 'transitions supported' : 'NO transition support') + ')'); });
+
   if (!('onpagereveal' in window)) return;
   var KEY = 'ptRipple';
   var DURATION = 1900;      // ms at full speed
@@ -46,8 +68,15 @@
   // 2) New page after a cross-page navigation: run the ripple
   window.addEventListener('pagereveal', function (e) {
     var vt = e.viewTransition;
-    if (!vt) return;
-    if (reduce || !document.body) { vt.skipTransition(); return; }
+    if (!vt) {
+      var tapped = null; try { tapped = JSON.parse(sessionStorage.getItem(KEY)); } catch (_) {}
+      log(tapped && Date.now() - tapped.t < 8000 ? 'SKIPPED: link was tapped but the browser started no transition' : 'opened directly (no transition expected)');
+      return;
+    }
+    if (reduce) { log('skipped: reduce-motion is on'); vt.skipTransition(); return; }
+    // note: the page body may not exist yet here (WebKit can reveal early) - rings go on <html>, never skip for that
+    log('ripple started' + (document.body ? '' : ' (body not ready yet)'));
+    vt.finished.then(function () { log('ripple finished'); }, function (err) { log('ripple SKIPPED: ' + (err && (err.name + ' ' + err.message))); });
     var o = null;
     try { o = JSON.parse(sessionStorage.getItem(KEY)); sessionStorage.removeItem(KEY); } catch (_) {}
     var fresh = o && Date.now() - o.t < 8000;                         // back/forward or typed URL: from the centre
@@ -94,7 +123,7 @@
       d.style.cssText = 'position:fixed;pointer-events:none;z-index:2147483000;left:' + (x - far) + 'px;top:' + (y - far) + 'px;width:' + (2 * far) + 'px;height:' + (2 * far) + 'px;' +
         'border-radius:50%;transform:scale(0);will-change:transform,opacity;' +
         'background:radial-gradient(circle closest-side, transparent 97.8%, rgba(255,132,0,.22) 98.6%, #ff8400 99.4%, rgba(255,132,0,.3) 99.8%, transparent 100%);';
-      document.body.appendChild(d);
+      (document.body || document.documentElement).appendChild(d);
       return d;
     });
   }
@@ -142,7 +171,7 @@
         anim.playbackRate = rate;
         requestAnimationFrame(ctl);
       })(t0);
-    }).catch(function () {});
+    }).catch(function (err) { log('ripple could not start: ' + (err && (err.name + ' ' + err.message))); });
 
     vt.finished.catch(function () {}).then(function () {
       clearTimeout(guard);
