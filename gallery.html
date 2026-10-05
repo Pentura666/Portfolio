@@ -42,7 +42,7 @@
     .gallery-masonry-item { cursor: zoom-in; }
     #wave-bg { opacity: 0.45; } /* cubes dimmer here than on other pages (0.65), so photos lead */
 
-    /* lightbox: click a photo -> full screen, wheel / double-click / pinch to zoom, drag to pan */
+    /* lightbox: click a photo -> full screen; click / wheel / pinch to zoom, drag to pan */
     .lightbox {
       position: fixed;
       inset: 0;
@@ -208,7 +208,7 @@
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
 <script>
-/* Lightbox: click photo -> full screen. Zoom: wheel, double-click/tap, pinch, +/- buttons/keys.
+/* Lightbox: click photo -> full screen. Zoom: click the photo, wheel, pinch, +/- buttons/keys.
    Drag to pan when zoomed. Arrows / swipe / keys for prev-next, Esc or click outside to close. */
 (function() {
   var box = document.getElementById('lightbox');
@@ -389,11 +389,6 @@
     zoomAt(s * Math.exp(-e.deltaY * 0.0015), p.x, p.y, true);
   }, { passive: false });
 
-  stage.addEventListener('dblclick', function(e) {
-    var p = local(e);
-    if (s > 1.01) { s = 1; clamp(); apply(true); } else zoomAt(2.5, p.x, p.y, true);
-  });
-
   stage.addEventListener('pointerdown', function(e) {
     try { stage.setPointerCapture(e.pointerId); } catch (err) {}
     if (gliding) { s = ds; tx = dtx; ty = dty; gliding = false; } // grab mid-glide: hold it where it is drawn
@@ -450,9 +445,13 @@
   stage.addEventListener('pointerup', up);
   stage.addEventListener('pointercancel', up);
 
-  // click on the dark area around the photo closes (not after a drag, not when zoomed)
+  // one click (not a drag): on the photo = zoom in there / zoom back out; on the dark area around it = close.
+  // Matches the cursor labels ZOOM / DRAG / CLOSE in cursor.js.
   stage.addEventListener('click', function(e) {
-    if (!moved && s <= 1.01 && e.target === stage) close();
+    if (moved) return;
+    if (s > 1.01) { s = 1; clamp(); apply(true); return; }
+    if (e.target === img) { var p = local(e); zoomAt(2.5, p.x, p.y, true); }
+    else if (e.target === stage) close();
   });
 
   document.addEventListener('keydown', function(e) {
@@ -478,6 +477,6 @@ document.addEventListener('click', function(e) {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="wave-bg.js?v=5"></script>
-<script src="cursor.js?v=2"></script>
+<script src="cursor.js?v=3"></script>
 </body>
 </html>

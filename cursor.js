@@ -1,6 +1,7 @@
 /* Custom cursor — whole site. Small orange dot on the pointer + an orange ring that trails it.
    Over links/buttons the ring grows; over zoomable photos it becomes a big soft ring with a label:
-   VIEW (gallery thumbnails), ZOOM (open photo), DRAG (open photo while zoomed).
+   VIEW (gallery thumbnails), ZOOM (on the open photo), DRAG (open photo while zoomed),
+   CLOSE (dark area around the open photo — a click there closes it).
    Mouse / trackpad only — touch screens keep their normal behaviour. Styles: "custom cursor" in style.css. */
 (function () {
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
@@ -25,12 +26,15 @@
   html.classList.add('fx-cursor');
 
   var mx = 0, my = 0, rx = 0, ry = 0, last = 0, shown = false, target = null, mode = '';
-  var LABELS = { view: 'VIEW', zoom: 'ZOOM', drag: 'DRAG' };
+  var LABELS = { view: 'VIEW', zoom: 'ZOOM', drag: 'DRAG', close: 'CLOSE' };
 
   function detect(el) {
     if (!el || !el.closest) return '';
     var stage = el.closest('#lightbox-stage');
-    if (stage) return stage.classList.contains('zoomed') ? 'drag' : 'zoom';
+    if (stage) {
+      if (stage.classList.contains('zoomed')) return 'drag';
+      return el.id === 'lightbox-img' ? 'zoom' : 'close';
+    }
     if (el.closest('.gallery-masonry-item')) return 'view';
     if (el.closest('a, button, [role="button"], label, select, summary, .icon-btn')) return 'link';
     return '';
