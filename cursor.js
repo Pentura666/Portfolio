@@ -6,7 +6,7 @@
 (function () {
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
 
-  var LAG = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1000 : 10; // ring follow speed (higher = tighter)
+  var LAG = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1000 : 22; // ring follow speed (higher = tighter)
 
   var html = document.documentElement;
   var dot = document.createElement('div');
