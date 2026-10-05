@@ -33,7 +33,9 @@
     var stage = el.closest('#lightbox-stage');
     if (stage) {
       if (stage.classList.contains('zoomed')) return 'drag';
-      return el.id === 'lightbox-img' ? 'zoom' : 'close';
+      // by position, not target: while the button is held the stage captures the pointer
+      var r = document.getElementById('lightbox-img').getBoundingClientRect();
+      return (mx >= r.left && mx <= r.right && my >= r.top && my <= r.bottom) ? 'zoom' : 'close';
     }
     if (el.closest('.gallery-masonry-item')) return 'view';
     if (el.closest('a, button, [role="button"], label, select, summary, .icon-btn')) return 'link';

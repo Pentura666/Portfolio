@@ -447,11 +447,17 @@
 
   // one click (not a drag): on the photo = zoom in there / zoom back out; on the dark area around it = close.
   // Matches the cursor labels ZOOM / DRAG / CLOSE in cursor.js.
+  // Hit-test by position: pointer capture (for dragging) makes the browser report the click on the stage,
+  // not on the photo, so e.target can't tell them apart.
+  function onPhoto(e) {
+    var r = img.getBoundingClientRect();
+    return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+  }
   stage.addEventListener('click', function(e) {
     if (moved) return;
     if (s > 1.01) { s = 1; clamp(); apply(true); return; }
-    if (e.target === img) { var p = local(e); zoomAt(2.5, p.x, p.y, true); }
-    else if (e.target === stage) close();
+    if (onPhoto(e)) { var p = local(e); zoomAt(2.5, p.x, p.y, true); }
+    else close();
   });
 
   document.addEventListener('keydown', function(e) {
@@ -477,6 +483,6 @@ document.addEventListener('click', function(e) {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="wave-bg.js?v=5"></script>
-<script src="cursor.js?v=3"></script>
+<script src="cursor.js?v=4"></script>
 </body>
 </html>
