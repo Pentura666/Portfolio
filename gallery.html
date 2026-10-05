@@ -74,7 +74,6 @@
       will-change: transform;
       -webkit-user-drag: none;
     }
-    .lightbox-img.animate { transition: transform 0.25s ease; }
     .lightbox-btn {
       position: absolute;
       z-index: 2;
@@ -220,10 +219,28 @@
   var s = 1, tx = 0, ty = 0, w = 0, h = 0;
   var pointers = {}, drag = null, moved = false;
 
+  // s / tx / ty = where the photo is going; ds / dtx / dty = what is drawn. Zoom glides toward the target
+  // (eased follow, frame-rate independent); dragging and pinching draw directly so the photo stays under the finger.
+  var ds = 1, dtx = 0, dty = 0, gliding = false, lastT = 0;
+  var GLIDE = 10; // higher = snappier zoom, lower = floatier
+
+  function draw() {
+    img.style.transform = 'translate(' + dtx + 'px,' + dty + 'px) scale(' + ds + ')';
+  }
+  function glide(now) {
+    var dt = Math.min((now - lastT) / 1000, 0.05); lastT = now;
+    var k = 1 - Math.exp(-dt * GLIDE);
+    ds += (s - ds) * k; dtx += (tx - dtx) * k; dty += (ty - dty) * k;
+    if (Math.abs(s - ds) < 0.0005 && Math.abs(tx - dtx) < 0.2 && Math.abs(ty - dty) < 0.2) {
+      ds = s; dtx = tx; dty = ty; gliding = false;
+    }
+    draw();
+    if (gliding) requestAnimationFrame(glide);
+  }
   function apply(animate) {
-    img.classList.toggle('animate', !!animate);
-    img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + s + ')';
     stage.classList.toggle('zoomed', s > 1.01);
+    if (!animate) { gliding = false; ds = s; dtx = tx; dty = ty; draw(); return; }
+    if (!gliding) { gliding = true; lastT = performance.now(); requestAnimationFrame(glide); }
   }
 
   // keep the photo inside the screen: centered when smaller, edges never pulled inward when bigger
@@ -258,7 +275,7 @@
   function show(i) {
     index = (i + photos.length) % photos.length;
     s = 1;
-    img.classList.remove('animate');
+    gliding = false;
     img.style.transform = 'translate(-50%,-50%)';
     img.src = photos[index].src;
     img.alt = photos[index].alt;
@@ -277,8 +294,11 @@
   var CLIP_DELAY = 0.25;   // s, viewer starts opening after the tiles start
   var MAX_DELAY = 0.25;    // s, extra wait for the center tiles (outer ones go first)
   var CLOSE_TIME = 0.9;    // s, tiles gliding back
-  var CLIP_SHUT = 'inset(50% 50% 50% 50%)';
-  var CLIP_OPEN = 'inset(0% 0% 0% 0%)';
+  // clip = one number (50 = shut to the center point, 0 = full screen). Tweened as a plain number and written
+  // out each frame: the browser shortens 'inset(50% 50% 50% 50%)' to 'inset(50%)', and GSAP then pairs the
+  // numbers wrong and opens it from the bottom.
+  var clip = { p: 50 };
+  function applyClip() { box.style.clipPath = 'inset(' + clip.p + '% ' + clip.p + '% ' + clip.p + '% ' + clip.p + '%)'; }
   var flown = [], isOpen = false, tl = null;
   var animated = typeof gsap !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -317,9 +337,10 @@
     box.classList.add('open');
     show(i);
     if (img.decode) img.decode().catch(function() {}); // decode the big photo before the clip reaches it
-    if (!animated) { box.style.clipPath = CLIP_OPEN; return; }
+    if (!animated) { clip.p = 0; applyClip(); return; }
     tl = gsap.timeline();
-    tl.to(box, { clipPath: CLIP_OPEN, duration: CLIP_TIME, ease: 'power3.inOut' }, CLIP_DELAY);
+    applyClip();
+    tl.to(clip, { p: 0, duration: CLIP_TIME, ease: 'power3.inOut', onUpdate: applyClip }, CLIP_DELAY);
     flown.forEach(function(t) {
       tl.to(t.el, { x: t.x, y: t.y, opacity: 0, rotation: gsap.utils.random(-SPIN, SPIN),
                     duration: OPEN_TIME, ease: 'power2.inOut', force3D: true }, t.delay);
@@ -338,10 +359,10 @@
       window.waveBgPaused = false;
     }
     if (tl) tl.kill();
-    if (!animated) { box.style.clipPath = CLIP_SHUT; done(); return; }
+    if (!animated) { clip.p = 50; applyClip(); done(); return; }
     // mirror of the open: viewer shuts, then tiles glide home (center ones first), no bounce
     tl = gsap.timeline({ onComplete: done });
-    tl.to(box, { clipPath: CLIP_SHUT, duration: CLIP_TIME * 0.8, ease: 'power3.inOut' }, 0);
+    tl.to(clip, { p: 50, duration: CLIP_TIME * 0.8, ease: 'power3.inOut', onUpdate: applyClip }, 0);
     flown.forEach(function(t) {
       tl.to(t.el, { x: 0, y: 0, opacity: 1, rotation: 0, duration: CLOSE_TIME, ease: 'power3.out', force3D: true },
             0.15 + (MAX_DELAY - t.delay));
@@ -364,7 +385,7 @@
   stage.addEventListener('wheel', function(e) {
     e.preventDefault();
     var p = local(e);
-    zoomAt(s * Math.exp(-e.deltaY * 0.0015), p.x, p.y, false);
+    zoomAt(s * Math.exp(-e.deltaY * 0.0015), p.x, p.y, true);
   }, { passive: false });
 
   stage.addEventListener('dblclick', function(e) {
@@ -374,6 +395,7 @@
 
   stage.addEventListener('pointerdown', function(e) {
     try { stage.setPointerCapture(e.pointerId); } catch (err) {}
+    if (gliding) { s = ds; tx = dtx; ty = dty; gliding = false; } // grab mid-glide: hold it where it is drawn
     pointers[e.pointerId] = local(e);
     moved = false;
     drag = { tx: tx, ty: ty, start: local(e), s: s, dist: 0, mid: null };
