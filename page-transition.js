@@ -9,6 +9,19 @@
    Uses View Transitions (Chrome / Edge 126+, Safari 18.2+). Other browsers simply navigate / scroll
    normally. Loaded in <head> on every page so it is ready before the new page is shown. */
 (function () {
+  // Arriving at a section of another page (Press -> Contact = index.html#contact): jump straight there.
+  // The site has smooth scrolling on, so otherwise you watch the page scroll down under the ripple.
+  if (location.hash) {
+    var root = document.documentElement;
+    root.style.scrollBehavior = 'auto';
+    var jump = function () {
+      var t = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (t) t.scrollIntoView({ behavior: 'instant', block: 'start' });
+    };
+    document.addEventListener('DOMContentLoaded', jump);
+    window.addEventListener('load', function () { jump(); setTimeout(function () { root.style.scrollBehavior = ''; }, 100); });
+  }
+
   if (!('onpagereveal' in window)) return;
   var KEY = 'ptRipple';
   var DURATION = 1900;      // ms at full speed
