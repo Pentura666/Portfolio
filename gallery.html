@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gallery — Igor Nikitchenko</title>
   <meta name="description" content="Photo gallery — Igor Nikitchenko, Lighting Designer &amp; Creative Technologist" />
-  <link rel="stylesheet" href="style.css?v=6" />
+  <link rel="stylesheet" href="style.css?v=8" />
+  <script src="page-transition.js?v=2"></script>
   <style>
     .gallery-masonry {
       columns: 3;
@@ -16,14 +17,16 @@
       margin-bottom: 8px;
       border-radius: 4px;
       overflow: hidden;
-      background: #111;
+      background: transparent; /* no grey box while a photo loads */
       display: block;
     }
     .gallery-masonry-item img {
       width: 100%;
       display: block;
-      transition: transform 0.3s;
+      opacity: 0;
+      transition: transform 0.3s, opacity 0.5s ease; /* soft fade-in when the photo arrives */
     }
+    .gallery-masonry-item img.is-loaded { opacity: 1; }
     .gallery-masonry-item:hover img {
       transform: scale(1.03);
     }
@@ -196,6 +199,8 @@
           img.src = 'photos/' + f.name;
           img.alt = f.name;
           img.loading = 'lazy';
+          img.addEventListener('load', function () { img.classList.add('is-loaded'); });
+          img.addEventListener('error', function () { img.classList.add('is-loaded'); });
           item.appendChild(img);
           gallery.appendChild(item);
         });
@@ -482,7 +487,7 @@ document.addEventListener('click', function(e) {
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="wave-bg.js?v=9"></script>
+<script src="wave-bg.js?v=11"></script>
 <script src="cursor.js?v=5"></script>
 </body>
 </html>

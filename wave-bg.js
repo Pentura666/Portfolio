@@ -203,11 +203,17 @@
 
   // own clock: stands still while paused (window.waveBgPaused = true, e.g. under the gallery viewer),
   // so the wave resumes where it stopped instead of jumping
-  var simT = 0;
+  var simT = 0, drawn = false;
+  try { simT = parseFloat(sessionStorage.getItem('waveBgT')) || 0; } catch (e) {}
+  // remember the wave position when leaving the page, so the next page continues it seamlessly
+  window.addEventListener('pagehide', function () { try { sessionStorage.setItem('waveBgT', String(simT)); } catch (e) {} });
 
   function frame() {
     var dt = Math.min(clock.getDelta(), 0.1);
-    if (window.waveBgPaused) { requestAnimationFrame(frame); return; }
+    // paused (gallery viewer, page transition): hold still, but only after a first frame exists, so a page
+    // that starts paused (arriving under the ripple) shows the cubes instead of an empty background
+    if (window.waveBgPaused && drawn) { requestAnimationFrame(frame); return; }
+    drawn = true;
     simT += dt;
     var now = simT;
     var t = reduceMotion ? 0 : now * CONFIG.speed;

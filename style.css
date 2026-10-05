@@ -1047,3 +1047,17 @@ html.fx-cursor, html.fx-cursor * { cursor: none !important; }
 }
 .fx-cursor-ring.is-photo .fx-cursor-label { opacity: 1; transition-delay: 0.1s; }
 .fx-cursor-ring.is-down .fx-cursor-inner { transform: translate(-50%, -50%) scale(0.85); }
+
+/* Page transition (page-transition.js): ripple erase between pages.
+   The script drives the animation; these rules switch off the browser's default crossfade. */
+@view-transition { navigation: auto; }
+/* dark behind everything, so a transition frame without a snapshot is never the browser's white canvas */
+html { background: var(--bg); }
+body { background: transparent; } /* root carries the colour; a body background would cover the cube canvas (z -1) */
+::view-transition { background: var(--bg); }
+::view-transition-group(root),
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
