@@ -17,7 +17,7 @@
     rippleSpeed: 9,        // how fast the ring travels outward (units / s)
     rippleWidth: 2.5,      // thickness of the ring
     rippleLife: 3.5,       // seconds until a ripple's height and color have faded out
-    rippleMax: 8,          // ripples alive at once (oldest dropped)
+    rippleMax: 16,         // ripples alive at once (past this the oldest fades out quickly, never just vanishes)
     rippleColor: 0.35,     // how much a ripple tints cubes orange (0 = none)
     rippleColorLife: 6,    // seconds the orange stays on the ring (holds, then fades at the end)
     echoes: 0.6,           // trailing echo waves behind the ring (0 = single ring)
@@ -31,8 +31,14 @@
     gloss: 0.07,           // surface roughness (lower = sharper reflections)
     reflections: 0.6,      // strength of the studio reflections
     glow: 0.25,            // how much orange cubes light up
-    tilt: 8                // degrees the field leans away: back (top of screen) lower, front higher
+    tilt: 8,               // degrees the field leans away: back (top of screen) lower, front higher
+    fill: 0.94,            // cube size vs its grid cell (lower = wider dark gaps between cubes)
+    keyLight: 0.35,        // main light strength
+    keyPos: [10, 30, 15],  // main light direction (low + to the side = faces differ more = more volume)
+    rimLight: 0,           // back light that rims the far edges of the cubes (0 = off)
+    shadows: false         // cubes cast shadows on each other (heavier on the GPU)
   };
+  if (window.WAVE_BG) for (var key in window.WAVE_BG) CONFIG[key] = window.WAVE_BG[key]; // per-page / preview overrides
 
   var canvas = document.createElement('canvas');
   canvas.id = 'wave-bg';
@@ -54,9 +60,24 @@
   var camera = new THREE.PerspectiveCamera(35, 1, 0.1, 200);
 
   scene.add(new THREE.AmbientLight(0xffffff, 0.08 * CONFIG.brightness));
-  var keyLight = new THREE.DirectionalLight(0xffffff, 0.35 * CONFIG.brightness);
-  keyLight.position.set(10, 30, 15);
+  var keyLight = new THREE.DirectionalLight(0xffffff, CONFIG.keyLight * CONFIG.brightness);
+  keyLight.position.set(CONFIG.keyPos[0], CONFIG.keyPos[1], CONFIG.keyPos[2]);
   scene.add(keyLight);
+  if (CONFIG.rimLight > 0) {
+    var rim = new THREE.DirectionalLight(0xffffff, CONFIG.rimLight * CONFIG.brightness);
+    rim.position.set(-30, 10, -30); // from behind the field, facing the camera
+    scene.add(rim);
+  }
+  if (CONFIG.shadows) {
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    keyLight.castShadow = true;
+    keyLight.shadow.mapSize.set(2048, 2048);
+    var sc = keyLight.shadow.camera;
+    sc.left = sc.bottom = -60; sc.right = sc.top = 60; sc.near = 1; sc.far = 150;
+    keyLight.position.multiplyScalar(2);
+    keyLight.shadow.bias = -0.0005;
+  }
 
   var N = CONFIG.grid, count = N * N;
   // rounded cube: subdivided box, corners pushed onto small spheres
@@ -73,7 +94,7 @@
     g.computeVertexNormals();
     return g;
   }
-  var geometry = roundedBox(CONFIG.cubeSize * 0.94, CONFIG.roundness, 4);
+  var geometry = roundedBox(CONFIG.cubeSize * CONFIG.fill, CONFIG.roundness, 4);
 
   // studio reflections: a dark room with thin grey light strips, baked into an environment map
   var envScene = new THREE.Scene();
@@ -106,6 +127,7 @@
       '#include <emissivemap_fragment>\n#ifdef USE_COLOR\n totalEmissiveRadiance += max(vColor - 0.12, 0.0) * ' + CONFIG.glow.toFixed(2) + ';\n#endif');
   };
   var mesh = new THREE.InstancedMesh(geometry, material, count);
+  mesh.castShadow = mesh.receiveShadow = CONFIG.shadows;
   mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   // lean the whole field away from the camera (axis across the view, camera looks along -x/-z)
   mesh.quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, -1).normalize(), -CONFIG.tilt * Math.PI / 180);
@@ -156,7 +178,9 @@
     if (raycaster.ray.intersectPlane(ground, hit)) {
       mesh.worldToLocal(hit);
       ripples.push({ x: hit.x, z: hit.z, t0: simT });
-      if (ripples.length > CONFIG.rippleMax) ripples.shift();
+      // too many: fade the oldest still-live ripples out over 0.6 s instead of deleting them mid-flight
+      var live = ripples.filter(function (rp) { return rp.kill == null; });
+      for (var o = 0; o < live.length - CONFIG.rippleMax; o++) live[o].kill = simT;
     }
   }, { passive: true });
 
@@ -190,12 +214,19 @@
 
     // ripple state for this frame: ring radius + fade
     // height and color fade after rippleLife; the flip keeps rolling to the edge so no cube stops halfway
-    while (ripples.length && (now - ripples[0].t0) * CONFIG.rippleSpeed > half * 1.5 + 12) ripples.shift();
+    for (var rr = ripples.length - 1; rr >= 0; rr--) {
+      var gone = (now - ripples[rr].t0) * CONFIG.rippleSpeed > half * 1.5 + 12;
+      if (gone || (ripples[rr].kill != null && now - ripples[rr].kill > 0.6)) ripples.splice(rr, 1);
+    }
     for (var r = 0; r < ripples.length; r++) {
       var age = now - ripples[r].t0;
       ripples[r].front = age * CONFIG.rippleSpeed;
       ripples[r].fade = Math.pow(Math.max(0, 1 - age / CONFIG.rippleLife), 2);
       ripples[r].colorFade = 1 - Math.pow(Math.min(1, age / CONFIG.rippleColorLife), 3); // stays strong, fades late
+      if (ripples[r].kill != null) { // pushed out by newer clicks: quick soft fade
+        var kf = Math.max(0, 1 - (now - ripples[r].kill) / 0.6);
+        ripples[r].fade *= kf; ripples[r].colorFade *= kf;
+      }
     }
 
     // cursor point glides instead of jumping
