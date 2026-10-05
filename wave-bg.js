@@ -23,6 +23,8 @@
   var canvas = document.createElement('canvas');
   canvas.id = 'wave-bg';
   canvas.setAttribute('aria-hidden', 'true');
+  // layout inline too, so a cached old style.css can't turn it into a block above the page
+  canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:-1;display:block;pointer-events:none;';
   document.body.insertBefore(canvas, document.body.firstChild);
 
   var renderer;

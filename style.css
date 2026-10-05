@@ -991,3 +991,7 @@ footer p {
   pointer-events: none;
   opacity: 0.85; /* lower = text easier to read, higher = stronger effect */
 }
+
+/* wave cubes show behind the hero: photo wall + its vignette hidden (delete these 2 lines to bring the wall back) */
+.hero-bg { display: none; }
+.hero-overlay { display: none; }
