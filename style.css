@@ -228,6 +228,9 @@ nav {
   font-family: var(--font-secondary);
 }
 
+/* jumps to a section (#projects, #contact) stop below the sticky nav bar, not under it */
+section[id] { scroll-margin-top: 60px; }
+
 /* SECTION */
 .section {
   padding: 80px 0;
@@ -937,7 +940,7 @@ footer p {
     font-size: 16px;
   }
   .nav-links li:last-child a { border-bottom: none; }
-  nav { position: relative; }
+  /* nav stays sticky on phones too: the menu button is always at hand while scrolling */
 
   /* HERO */
   .hero h1 { font-size: 32px; }
