@@ -37,10 +37,10 @@
     keyPos: [10, 30, 15],  // main light direction (low + to the side = faces differ more = more volume)
     rimLight: 0,           // back light that rims the far edges of the cubes (0 = off)
     shadows: false,        // cubes cast shadows on each other (heavier on the GPU)
-    camPortrait: [20, 76, 20], // camera on tall screens (phones): a little tilted back for depth (user's "Between")
-    lookPortrait: [-5, 0, -5], // where the phone camera looks (further back = more of the far field, more depth)
-    gridPhone: 88,             // cubes per side on phones
-    tiltPhone: 12              // field lean on phones (degrees)
+    camPortrait: [16, 60, 16], // camera on tall screens (phones): tilted back for depth (user's pick "T5")
+    lookPortrait: [-8, 0, -8], // where the phone camera looks (further back = more of the far field, more depth)
+    gridPhone: 80,             // cubes per side on phones (80 looks the same as 104 here, much lighter)
+    tiltPhone: 16              // field lean on phones (degrees)
   };
   if (window.WAVE_BG) for (var key in window.WAVE_BG) CONFIG[key] = window.WAVE_BG[key]; // per-page / preview overrides
 
