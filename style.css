@@ -979,3 +979,15 @@ footer p {
   footer p { font-size: 12px; }
 }
 /* v2 */
+
+/* wave cubes background (wave-bg.js) — fixed behind all content */
+#wave-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  display: block;
+  pointer-events: none;
+  opacity: 0.85; /* lower = text easier to read, higher = stronger effect */
+}
