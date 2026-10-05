@@ -8,7 +8,7 @@
     grid: 64,              // cubes per side
     spacing: 1.1,
     cubeSize: 1,
-    amplitude: 1.1,        // wave height
+    amplitude: 1.5,        // wave height
     frequency: 0.5,        // ripple density
     speed: 0.7,            // animation speed (calm, like the photo wall drift)
     mouseRadius: 7,        // size of the lift under the cursor
