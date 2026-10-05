@@ -5,7 +5,7 @@
 
   // ===== Settings =====
   var CONFIG = {
-    grid: 64,              // cubes per side
+    grid: 88,              // cubes per side (big enough that the far edge never shows on wide screens)
     spacing: 1.1,
     cubeSize: 1,
     amplitude: 1.5,        // wave height
@@ -30,7 +30,8 @@
     roundness: 0.12,       // rounded cube edges (catch highlights)
     gloss: 0.07,           // surface roughness (lower = sharper reflections)
     reflections: 0.6,      // strength of the studio reflections
-    glow: 0.25             // how much orange cubes light up
+    glow: 0.25,            // how much orange cubes light up
+    tilt: 8                // degrees the field leans away: back (top of screen) lower, front higher
   };
 
   var canvas = document.createElement('canvas');
@@ -106,6 +107,9 @@
   };
   var mesh = new THREE.InstancedMesh(geometry, material, count);
   mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  // lean the whole field away from the camera (axis across the view, camera looks along -x/-z)
+  mesh.quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, -1).normalize(), -CONFIG.tilt * Math.PI / 180);
+  mesh.updateMatrixWorld();
   scene.add(mesh);
 
   var pos = new Float32Array(count * 2);
@@ -128,7 +132,7 @@
   // Cursor -> point on the cube field (works over any page content)
   var raycaster = new THREE.Raycaster();
   var ndc = new THREE.Vector2();
-  var ground = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+  var ground = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0).applyMatrix4(mesh.matrixWorld); // tilted with the field
   var hit = new THREE.Vector3();
   var mouse = { x: 0, z: 0, tx: 0, tz: 0, strength: 0, target: 0 };
 
@@ -137,6 +141,7 @@
     ndc.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
     raycaster.setFromCamera(ndc, camera);
     if (raycaster.ray.intersectPlane(ground, hit)) {
+      mesh.worldToLocal(hit);
       mouse.tx = hit.x; mouse.tz = hit.z; mouse.target = 1;
     }
   }, { passive: true });
@@ -149,6 +154,7 @@
     ndc.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
     raycaster.setFromCamera(ndc, camera);
     if (raycaster.ray.intersectPlane(ground, hit)) {
+      mesh.worldToLocal(hit);
       ripples.push({ x: hit.x, z: hit.z, t0: simT });
       if (ripples.length > CONFIG.rippleMax) ripples.shift();
     }
@@ -159,7 +165,7 @@
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     var dist = camera.aspect < 1 ? 1.6 : 1;
-    camera.position.set(28 * dist, 40 * dist, 28 * dist); // higher = fills the screen
+    camera.position.set(24 * dist, 48 * dist, 24 * dist); // higher = fills the screen (steeper, so no empty band at the top)
     camera.lookAt(0, 0, 0);
     camera.updateProjectionMatrix();
   }
