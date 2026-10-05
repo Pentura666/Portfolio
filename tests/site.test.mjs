@@ -114,6 +114,10 @@ for (const key of only) {
   await send('Emulation.setDeviceMetricsOverride', { width: d.w, height: d.h, deviceScaleFactor: d.dpr, mobile: d.touch, screenWidth: d.w, screenHeight: d.h });
   await send('Emulation.setTouchEmulationEnabled', { enabled: d.touch, maxTouchPoints: d.touch ? 5 : 0 });
   await send('Emulation.setUserAgentOverride', { userAgent: d.ua || '' });
+  // pointer type must be set per device, or a desktop run after a phone run still reports a touch screen
+  await send('Emulation.setEmulatedMedia', { features: d.touch
+    ? [{ name: 'pointer', value: 'coarse' }, { name: 'hover', value: 'none' }, { name: 'any-pointer', value: 'coarse' }, { name: 'any-hover', value: 'none' }]
+    : [{ name: 'pointer', value: 'fine' }, { name: 'hover', value: 'hover' }, { name: 'any-pointer', value: 'fine' }, { name: 'any-hover', value: 'hover' }] });
   await send('Emulation.setCPUThrottlingRate', { rate: 1 });
   console.log(`\n== ${d.name} (${d.w}x${d.h})`);
 
@@ -167,6 +171,15 @@ for (const key of only) {
     await go('index.html'); await tapNav('#contact'); await sleep(3500);
     const s = JSON.parse(await js(`JSON.stringify({connect:(function(){var l=[...document.querySelectorAll('.cv-section-label')].find(e=>e.textContent.trim()==='Connect With Me');var r=l.getBoundingClientRect();return r.top>=59&&r.bottom<innerHeight})(), icons:(function(){var r=document.querySelector('.social-row').getBoundingClientRect();return r.top>60&&r.bottom<=innerHeight})()})`));
     return { ok: s.connect && s.icons, note: JSON.stringify(s) };
+  });
+
+  await check(key, 'project card with a chooser: opens it, page does not jump to the top', async () => {
+    await go('index.html');
+    await js(`document.documentElement.style.scrollBehavior='auto'; document.getElementById('multi-rd').scrollIntoView({block:'center'}); 'ok'`); await sleep(500);
+    const y0 = await js('Math.round(scrollY)');
+    const c = await rect('#multi-rd'); await tap(c.x, c.y); await sleep(1500);
+    const s = JSON.parse(await js(`JSON.stringify({y:Math.round(scrollY), popup:document.getElementById('popup-rd').classList.contains('show'), hash:location.hash})`));
+    return { ok: Math.abs(s.y - y0) <= 2 && s.popup, note: `scrollY ${y0} -> ${s.y}, chooser open ${s.popup}` };
   });
 
   await check(key, 'Press -> Contact (other page): arrives without scrolling', async () => {

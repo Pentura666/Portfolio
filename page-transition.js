@@ -60,16 +60,18 @@
   var running = null;
   function samePage(e, hash, x, y) {
     if (!document.startViewTransition || reduce) return;              // browser default (smooth scroll)
-    var target = hash && hash.length > 1 ? document.getElementById(decodeURIComponent(hash.slice(1))) : null;
-    if (hash && hash.length > 1 && !target) return;
+    // only real section links (#projects, #contact...). href="#" buttons (the project cards that open a
+    // chooser) are not navigation: leave them alone, or the page would ripple and jump to the top
+    if (!hash || hash.length < 2) return;
+    var target = document.getElementById(decodeURIComponent(hash.slice(1)));
+    if (!target) return;
     e.preventDefault();
     if (running) { try { running.skipTransition(); } catch (_) {} }
     var rings = [];
     var vt = document.startViewTransition(function () {
       // the old view is already captured here: jump, then add the rings so only the new view has them
-      if (target) target.scrollIntoView({ behavior: 'instant', block: 'start' });
-      else window.scrollTo({ top: 0, behavior: 'instant' });
-      if (hash !== location.hash) history.pushState(null, '', hash || location.pathname);
+      target.scrollIntoView({ behavior: 'instant', block: 'start' });
+      if (hash !== location.hash) history.pushState(null, '', hash);
       rings = makeRings(x, y);
     });
     running = vt;
