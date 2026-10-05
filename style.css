@@ -967,7 +967,7 @@ footer p {
   .cv-grid { grid-template-columns: 1fr; gap: 32px; }
   .cv-section-label { font-size: 18px; }
   .job-header { flex-direction: column; align-items: flex-start; gap: 2px; }
-  .social-row { flex-direction: column; }
+  .social-row { flex-direction: row; flex-wrap: wrap; } /* icons side by side on phones */
   .social-btn { justify-content: center; }
 
   /* PAGE HEADER */
