@@ -1064,3 +1064,53 @@ body { background: transparent; } /* root carries the colour; a body background 
 @media (prefers-reduced-motion: reduce) {
   @view-transition { navigation: none; }
 }
+
+/* phone menu button: the cursor's orange ring with three dots travelling on the ring (the button's 3 spans).
+   Menu open: ring fills softly; nav-menu.js glides the dots into a line in the centre and back. */
+@media (max-width: 600px) {
+  .nav-toggle { position: relative; display: block; width: 44px; height: 44px; padding: 0; -webkit-tap-highlight-color: transparent; }
+  .nav-toggle::before {
+    content: ''; position: absolute; inset: 5px; border: 1.5px solid var(--primary); border-radius: 50%;
+    transition: transform 0.35s cubic-bezier(.22,1,.36,1), background-color 0.3s;
+  }
+  .nav-toggle span {
+    position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; margin: -3px 0 0 -3px;
+    border-radius: 50%; background: var(--primary);
+    animation: nav-orbit 12s linear infinite;
+    transition: none;   /* overrides the old hamburger lines' transition: nav-menu.js moves the dots frame by frame */
+  }
+  .nav-toggle span:nth-child(2) { animation-delay: -4s; }
+  .nav-toggle span:nth-child(3) { animation-delay: -8s; }
+  nav:has(.nav-links.open) .nav-toggle::before { transform: scale(1.1); background-color: rgba(255, 132, 0, 0.14); }
+  /* the dots' glide into a line when the menu opens is driven by nav-menu.js */
+}
+@keyframes nav-orbit { from { transform: rotate(0deg) translateX(16.25px); } to { transform: rotate(360deg) translateX(16.25px); } }
+@media (max-width: 600px) and (prefers-reduced-motion: reduce) {
+  .nav-toggle span { animation: none; transform: rotate(-90deg) translateX(16.25px); }
+  .nav-toggle span:nth-child(2) { transform: rotate(30deg) translateX(16.25px); }
+  .nav-toggle span:nth-child(3) { transform: rotate(150deg) translateX(16.25px); }
+}
+
+/* phone menu panel: unrolls down from the bar, page names fade in one after another; rolls back up on close.
+   Always laid out (display:flex) so it can animate; hidden + unclickable via visibility while closed. */
+@media (max-width: 600px) {
+  .nav-links {
+    display: flex; visibility: hidden; opacity: 0; clip-path: inset(0 0 100% 0);
+    transition: clip-path 0.35s cubic-bezier(.4,0,.2,1), opacity 0.25s ease 0.1s, visibility 0s linear 0.35s;
+  }
+  .nav-links.open {
+    visibility: visible; opacity: 1; clip-path: inset(0 0 0 0);
+    transition: clip-path 0.5s cubic-bezier(.22,1,.36,1), opacity 0.2s ease, visibility 0s;
+  }
+  .nav-links li { opacity: 0; transform: translateY(-6px); transition: opacity 0.2s ease, transform 0.3s ease; }
+  .nav-links.open li { opacity: 1; transform: none; transition: opacity 0.35s ease, transform 0.45s cubic-bezier(.22,1,.36,1); }
+  .nav-links.open li:nth-child(1) { transition-delay: 0.06s; }
+  .nav-links.open li:nth-child(2) { transition-delay: 0.10s; }
+  .nav-links.open li:nth-child(3) { transition-delay: 0.14s; }
+  .nav-links.open li:nth-child(4) { transition-delay: 0.18s; }
+  .nav-links.open li:nth-child(5) { transition-delay: 0.22s; }
+  .nav-links.open li:nth-child(6) { transition-delay: 0.26s; }
+}
+@media (max-width: 600px) and (prefers-reduced-motion: reduce) {
+  .nav-links, .nav-links.open, .nav-links li, .nav-links.open li { transition: none; }
+}
