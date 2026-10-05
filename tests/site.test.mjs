@@ -112,10 +112,11 @@ for (const key of only) {
   const d = DEVICES[key]; if (!d) { console.error('unknown device ' + key); continue; }
   touch = d.touch;
   await send('Emulation.setDeviceMetricsOverride', { width: d.w, height: d.h, deviceScaleFactor: d.dpr, mobile: d.touch, screenWidth: d.w, screenHeight: d.h });
-  await send('Emulation.setTouchEmulationEnabled', { enabled: d.touch, maxTouchPoints: d.touch ? 5 : 0 });
+  // note: { enabled: false, maxTouchPoints: 0 } is silently ignored by Chrome - send enabled:false alone
+  await send('Emulation.setTouchEmulationEnabled', d.touch ? { enabled: true, maxTouchPoints: 5 } : { enabled: false });
   await send('Emulation.setUserAgentOverride', { userAgent: d.ua || '' });
   // pointer type must be set per device, or a desktop run after a phone run still reports a touch screen
-  await send('Emulation.setEmulatedMedia', { features: d.touch
+  await send('Emulation.setEmulatedMedia', { media: '', features: d.touch
     ? [{ name: 'pointer', value: 'coarse' }, { name: 'hover', value: 'none' }, { name: 'any-pointer', value: 'coarse' }, { name: 'any-hover', value: 'none' }]
     : [{ name: 'pointer', value: 'fine' }, { name: 'hover', value: 'hover' }, { name: 'any-pointer', value: 'fine' }, { name: 'any-hover', value: 'hover' }] });
   await send('Emulation.setCPUThrottlingRate', { rate: 1 });

@@ -37,7 +37,10 @@
     keyPos: [10, 30, 15],  // main light direction (low + to the side = faces differ more = more volume)
     rimLight: 0,           // back light that rims the far edges of the cubes (0 = off)
     shadows: false,        // cubes cast shadows on each other (heavier on the GPU)
-    camPortrait: [14, 62, 14] // camera on tall screens (phones): position; steeper than desktop so the field fills the top too
+    camPortrait: [20, 76, 20], // camera on tall screens (phones): a little tilted back for depth (user's "Between")
+    lookPortrait: [-5, 0, -5], // where the phone camera looks (further back = more of the far field, more depth)
+    gridPhone: 88,             // cubes per side on phones
+    tiltPhone: 12              // field lean on phones (degrees)
   };
   if (window.WAVE_BG) for (var key in window.WAVE_BG) CONFIG[key] = window.WAVE_BG[key]; // per-page / preview overrides
 
@@ -81,7 +84,7 @@
   }
 
   // phones see less of the field (narrow screen): fewer cubes = about half the CPU per frame
-  var N = Math.min(window.innerWidth, window.innerHeight) < 700 ? Math.min(CONFIG.grid, 64) : CONFIG.grid, count = N * N;
+  var N = Math.min(window.innerWidth, window.innerHeight) < 700 ? CONFIG.gridPhone : CONFIG.grid, count = N * N;
   // rounded cube: subdivided box, corners pushed onto small spheres
   function roundedBox(size, radius, seg) {
     var g = new THREE.BoxGeometry(size, size, size, seg, seg, seg);
@@ -132,7 +135,8 @@
   mesh.castShadow = mesh.receiveShadow = CONFIG.shadows;
   mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   // lean the whole field away from the camera (axis across the view, camera looks along -x/-z)
-  mesh.quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, -1).normalize(), -CONFIG.tilt * Math.PI / 180);
+  var phone = Math.min(window.innerWidth, window.innerHeight) < 700;
+  mesh.quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, -1).normalize(), -(phone ? CONFIG.tiltPhone : CONFIG.tilt) * Math.PI / 180);
   mesh.updateMatrixWorld();
   scene.add(mesh);
 
@@ -190,9 +194,10 @@
     var w = window.innerWidth, h = window.innerHeight;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    if (camera.aspect < 1) camera.position.set(CONFIG.camPortrait[0], CONFIG.camPortrait[1], CONFIG.camPortrait[2]);
-    else camera.position.set(24, 48, 24); // higher = fills the screen (steeper, so no empty band at the top)
-    camera.lookAt(0, 0, 0);
+    if (camera.aspect < 1) { camera.position.set(CONFIG.camPortrait[0], CONFIG.camPortrait[1], CONFIG.camPortrait[2]); camera.lookAt(CONFIG.lookPortrait[0], CONFIG.lookPortrait[1], CONFIG.lookPortrait[2]); }
+    else { camera.position.set(24, 48, 24); camera.lookAt(0, 0, 0); } // higher = fills the screen (steeper, so no empty band at the top)
+    // fog follows the camera distance, so a farther camera doesn't sink the cubes into the fog (desktop: ~50..100)
+    var camDist = camera.position.length(); scene.fog.near = camDist * 0.85; scene.fog.far = camDist * 1.7;
     camera.updateProjectionMatrix();
   }
   window.addEventListener('resize', resize);
