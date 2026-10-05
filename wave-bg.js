@@ -13,6 +13,11 @@
     speed: 0.7,            // animation speed (calm, like the photo wall drift)
     mouseRadius: 7,        // size of the lift under the cursor
     mouseStrength: 3,      // height of the lift
+    rippleStrength: 2.2,   // click ripple height
+    rippleSpeed: 14,       // how fast the ring travels outward (units / s)
+    rippleWidth: 2.5,      // thickness of the ring
+    rippleLife: 2.6,       // seconds until a ripple has faded out
+    rippleMax: 8,          // ripples alive at once (oldest dropped)
     colorLow: '#1a1a1a',   // --bg-card: wave bottoms
     colorHigh: '#4a4a4a',  // light grey: wave tops (monochrome, like the photo wall)
     colorCursor: '#ff8400',// --primary: only where the cursor is
@@ -85,6 +90,18 @@
   }, { passive: true });
   document.documentElement.addEventListener('pointerleave', function () { mouse.target = 0; });
 
+  // Click / tap -> ring ripple travelling out from that point
+  var ripples = [];
+  window.addEventListener('pointerdown', function (e) {
+    if (reduceMotion) return;
+    ndc.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
+    raycaster.setFromCamera(ndc, camera);
+    if (raycaster.ray.intersectPlane(ground, hit)) {
+      ripples.push({ x: hit.x, z: hit.z, t0: clock.getElapsedTime() });
+      if (ripples.length > CONFIG.rippleMax) ripples.shift();
+    }
+  }, { passive: true });
+
   function resize() {
     var w = window.innerWidth, h = window.innerHeight;
     renderer.setSize(w, h, false);
@@ -103,7 +120,16 @@
   var range = A * 3 + CONFIG.mouseStrength;
 
   function frame() {
-    var t = reduceMotion ? 0 : clock.getElapsedTime() * CONFIG.speed;
+    var now = clock.getElapsedTime();
+    var t = reduceMotion ? 0 : now * CONFIG.speed;
+
+    // ripple state for this frame: ring radius + fade
+    while (ripples.length && now - ripples[0].t0 > CONFIG.rippleLife) ripples.shift();
+    for (var r = 0; r < ripples.length; r++) {
+      var age = now - ripples[r].t0;
+      ripples[r].front = age * CONFIG.rippleSpeed;
+      ripples[r].fade = Math.pow(1 - age / CONFIG.rippleLife, 2);
+    }
 
     // cursor point glides instead of jumping
     mouse.x += (mouse.tx - mouse.x) * 0.12;
@@ -124,6 +150,17 @@
         y += f * f * CONFIG.mouseStrength * mouse.strength;
         glow = f * f * mouse.strength;
       }
+
+      for (var r = 0; r < ripples.length; r++) {
+        var rp = ripples[r];
+        var rx = x - rp.x, rz = z - rp.z;
+        var off = (Math.sqrt(rx * rx + rz * rz) - rp.front) / CONFIG.rippleWidth;
+        if (off < -3 || off > 3) continue;
+        var ring = Math.exp(-off * off) * rp.fade;
+        y += Math.cos(off * 2) * ring * CONFIG.rippleStrength;
+        glow += ring * 0.8; // crest tints orange, fades with the ring
+      }
+      if (glow > 1) glow = 1;
 
       dummy.position.set(x, y, z);
       dummy.updateMatrix();
