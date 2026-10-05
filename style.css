@@ -943,8 +943,11 @@ footer p {
   /* nav stays sticky on phones too: the menu button is always at hand while scrolling */
 
   /* HERO */
-  .hero h1 { font-size: 32px; }
-  .hero-subtitle { font-size: 14px; letter-spacing: 0.1em; margin-bottom: 16px; }
+  .hero h1 { font-size: min(32px, 8.8vw); white-space: nowrap; } /* name stays on one line on small phones */
+  /* phones: each title on its own line, the dot between them on its own line */
+  .hero-subtitle { font-size: 14px; letter-spacing: 0.1em; margin-bottom: 16px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .hero-subtitle span { white-space: nowrap; }
+  .hero-sep-dot { line-height: 1; font-size: 18px; }
   .hero-avatar, .hero-avatar-placeholder { width: 240px; height: 240px; font-size: 32px; }
   .hero-bio { font-size: 14px; }
   .hero-content { gap: 16px; }
