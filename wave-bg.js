@@ -36,7 +36,8 @@
     keyLight: 0.35,        // main light strength
     keyPos: [10, 30, 15],  // main light direction (low + to the side = faces differ more = more volume)
     rimLight: 0,           // back light that rims the far edges of the cubes (0 = off)
-    shadows: false         // cubes cast shadows on each other (heavier on the GPU)
+    shadows: false,        // cubes cast shadows on each other (heavier on the GPU)
+    camPortrait: [14, 62, 14] // camera on tall screens (phones): position; steeper than desktop so the field fills the top too
   };
   if (window.WAVE_BG) for (var key in window.WAVE_BG) CONFIG[key] = window.WAVE_BG[key]; // per-page / preview overrides
 
@@ -79,7 +80,8 @@
     keyLight.shadow.bias = -0.0005;
   }
 
-  var N = CONFIG.grid, count = N * N;
+  // phones see less of the field (narrow screen): fewer cubes = about half the CPU per frame
+  var N = Math.min(window.innerWidth, window.innerHeight) < 700 ? Math.min(CONFIG.grid, 64) : CONFIG.grid, count = N * N;
   // rounded cube: subdivided box, corners pushed onto small spheres
   function roundedBox(size, radius, seg) {
     var g = new THREE.BoxGeometry(size, size, size, seg, seg, seg);
@@ -188,8 +190,8 @@
     var w = window.innerWidth, h = window.innerHeight;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    var dist = camera.aspect < 1 ? 1.6 : 1;
-    camera.position.set(24 * dist, 48 * dist, 24 * dist); // higher = fills the screen (steeper, so no empty band at the top)
+    if (camera.aspect < 1) camera.position.set(CONFIG.camPortrait[0], CONFIG.camPortrait[1], CONFIG.camPortrait[2]);
+    else camera.position.set(24, 48, 24); // higher = fills the screen (steeper, so no empty band at the top)
     camera.lookAt(0, 0, 0);
     camera.updateProjectionMatrix();
   }
@@ -203,18 +205,22 @@
 
   // own clock: stands still while paused (window.waveBgPaused = true, e.g. under the gallery viewer),
   // so the wave resumes where it stopped instead of jumping
-  var simT = 0, drawn = false;
+  var simT = 0, drawn = false, sinceLoad = 0;
   try { simT = parseFloat(sessionStorage.getItem('waveBgT')) || 0; } catch (e) {}
   // remember the wave position when leaving the page, so the next page continues it seamlessly
   window.addEventListener('pagehide', function () { try { sessionStorage.setItem('waveBgT', String(simT)); } catch (e) {} });
 
   function frame() {
-    var dt = Math.min(clock.getDelta(), 0.1);
+    // small step cap: slow frames while a new page loads must not make the wave jump
+    var dt = Math.min(clock.getDelta(), 1 / 30);
     // paused (gallery viewer, page transition): hold still, but only after a first frame exists, so a page
     // that starts paused (arriving under the ripple) shows the cubes instead of an empty background
     if (window.waveBgPaused && drawn) { requestAnimationFrame(frame); return; }
     drawn = true;
-    simT += dt;
+    // ease the wave in over the first second after a page change, instead of starting at full speed
+    sinceLoad += dt;
+    var k = Math.min(1, sinceLoad / 1.2); k = k * k * (3 - 2 * k);
+    simT += dt * k;
     var now = simT;
     var t = reduceMotion ? 0 : now * CONFIG.speed;
 

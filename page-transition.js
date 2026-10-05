@@ -87,7 +87,7 @@
   // the ripple, for either kind of view transition; getRings() returns the ring elements
   function ripple(vt, x, y, getRings) {
     var far = farFrom(x, y);
-    window.waveBgPaused = true;                                         // cube background rests during the ripple
+    // cube background keeps moving inside the ring (only the old page outside it is a still snapshot)
     var guard = setTimeout(function () { try { vt.skipTransition(); } catch (_) {} }, SLOW_MAX + DURATION * 2); // never hang
 
     vt.ready.then(function () {
@@ -132,7 +132,6 @@
     vt.finished.catch(function () {}).then(function () {
       clearTimeout(guard);
       getRings().forEach(function (d) { d.remove(); });
-      window.waveBgPaused = false;
     });
   }
 })();
