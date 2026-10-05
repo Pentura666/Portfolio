@@ -229,7 +229,7 @@ nav {
 }
 
 /* jumps to a section (#projects, #contact) stop below the sticky nav bar, not under it */
-section[id] { scroll-margin-top: 60px; }
+section[id], #contact { scroll-margin-top: 60px; }
 
 /* SECTION */
 .section {
