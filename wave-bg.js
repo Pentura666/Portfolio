@@ -97,7 +97,7 @@
     ndc.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
     raycaster.setFromCamera(ndc, camera);
     if (raycaster.ray.intersectPlane(ground, hit)) {
-      ripples.push({ x: hit.x, z: hit.z, t0: clock.getElapsedTime() });
+      ripples.push({ x: hit.x, z: hit.z, t0: simT });
       if (ripples.length > CONFIG.rippleMax) ripples.shift();
     }
   }, { passive: true });
@@ -119,8 +119,15 @@
   var A = CONFIG.amplitude;
   var range = A * 3 + CONFIG.mouseStrength;
 
+  // own clock: stands still while paused (window.waveBgPaused = true, e.g. under the gallery viewer),
+  // so the wave resumes where it stopped instead of jumping
+  var simT = 0;
+
   function frame() {
-    var now = clock.getElapsedTime();
+    var dt = Math.min(clock.getDelta(), 0.1);
+    if (window.waveBgPaused) { requestAnimationFrame(frame); return; }
+    simT += dt;
+    var now = simT;
     var t = reduceMotion ? 0 : now * CONFIG.speed;
 
     // ripple state for this frame: ring radius + fade

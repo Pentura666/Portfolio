@@ -40,6 +40,7 @@
       .gallery-masonry { columns: 1; }
     }
     .gallery-masonry-item { cursor: zoom-in; }
+    #wave-bg { opacity: 0.45; } /* cubes dimmer here than on other pages (0.65), so photos lead */
 
     /* lightbox: click a photo -> full screen, wheel / double-click / pinch to zoom, drag to pan */
     .lightbox {
@@ -54,8 +55,7 @@
     }
     .lightbox.open { display: block; }
     /* starts as a point in the middle; GSAP opens it to the full screen */
-    .lightbox { clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%); will-change: clip-path; }
-    .gallery-masonry-item { will-change: transform; }
+    .lightbox { clip-path: inset(50% 50% 50% 50%); will-change: clip-path; }
     .lightbox-stage {
       position: absolute;
       inset: 0;
@@ -268,11 +268,17 @@
   img.addEventListener('load', function() { reset(false); });
 
   // Open / close animation (after codrops EaseReverseClipMenu): visible tiles fly out radially from the
-  // screen center (outer ones first), the viewer opens as a clip-path from the center; close runs it back
-  // with an elastic snap on the tiles.
-  var FLY = 600, CLIP_DELAY = 0.3, MAX_DELAY = 0.3;
-  var CLIP_SHUT = 'polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%)';
-  var CLIP_OPEN = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)';
+  // screen center (outer ones first), the viewer opens as a clip from the center; close runs it back.
+  // Smooth in-out eases, no overshoot. Timing knobs:
+  var FLY = 600;           // px the tiles travel outward
+  var SPIN = 20;           // max random rotation (deg)
+  var OPEN_TIME = 1.0;     // s, tiles flying out
+  var CLIP_TIME = 1.0;     // s, viewer opening / closing
+  var CLIP_DELAY = 0.25;   // s, viewer starts opening after the tiles start
+  var MAX_DELAY = 0.25;    // s, extra wait for the center tiles (outer ones go first)
+  var CLOSE_TIME = 0.9;    // s, tiles gliding back
+  var CLIP_SHUT = 'inset(50% 50% 50% 50%)';
+  var CLIP_OPEN = 'inset(0% 0% 0% 0%)';
   var flown = [], isOpen = false, tl = null;
   var animated = typeof gsap !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -288,21 +294,35 @@
     }).filter(Boolean);
   }
 
+  // hiding the scrollbar would widen the page mid-animation and shift every tile; pad it instead
+  function lockScroll(lock) {
+    if (lock) {
+      var bar = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.paddingRight = bar > 0 ? bar + 'px' : '';
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    }
+  }
+
   function open(i) {
     photos = Array.prototype.slice.call(document.querySelectorAll('#gallery img'));
     if (!photos.length) return;
     isOpen = true;
     if (tl) tl.kill();
     if (!flown.length) flown = visibleTiles(); // re-open mid-close keeps the same tiles
+    window.waveBgPaused = true; // cubes stop computing while the viewer is up (it covers them)
+    lockScroll(true);
     box.classList.add('open');
-    document.body.style.overflow = 'hidden';
     show(i);
+    if (img.decode) img.decode().catch(function() {}); // decode the big photo before the clip reaches it
     if (!animated) { box.style.clipPath = CLIP_OPEN; return; }
     tl = gsap.timeline();
-    tl.to(box, { clipPath: CLIP_OPEN, duration: 0.8, ease: 'expo.out' }, CLIP_DELAY);
+    tl.to(box, { clipPath: CLIP_OPEN, duration: CLIP_TIME, ease: 'power3.inOut' }, CLIP_DELAY);
     flown.forEach(function(t) {
-      tl.to(t.el, { x: t.x, y: t.y, opacity: 0, rotation: gsap.utils.random(-30, 30),
-                    duration: 0.7, ease: 'expo.out' }, t.delay);
+      tl.to(t.el, { x: t.x, y: t.y, opacity: 0, rotation: gsap.utils.random(-SPIN, SPIN),
+                    duration: OPEN_TIME, ease: 'power2.inOut', force3D: true }, t.delay);
     });
   }
 
@@ -311,18 +331,20 @@
     isOpen = false;
     function done() {
       box.classList.remove('open');
-      document.body.style.overflow = '';
+      lockScroll(false);
       img.removeAttribute('src');
+      if (animated) gsap.set(flown.map(function(t) { return t.el; }), { clearProps: 'transform,opacity' });
       flown = [];
+      window.waveBgPaused = false;
     }
     if (tl) tl.kill();
     if (!animated) { box.style.clipPath = CLIP_SHUT; done(); return; }
-    // mirror of the open timeline: viewer shuts first, center tiles land first, outer ones last
+    // mirror of the open: viewer shuts, then tiles glide home (center ones first), no bounce
     tl = gsap.timeline({ onComplete: done });
-    tl.to(box, { clipPath: CLIP_SHUT, duration: 0.8, ease: 'expo.out' }, 0);
+    tl.to(box, { clipPath: CLIP_SHUT, duration: CLIP_TIME * 0.8, ease: 'power3.inOut' }, 0);
     flown.forEach(function(t) {
-      tl.to(t.el, { x: 0, y: 0, opacity: 1, rotation: 0, duration: 0.7, ease: 'elastic.out(1, 0.3)' },
-            0.1 + (MAX_DELAY - t.delay));
+      tl.to(t.el, { x: 0, y: 0, opacity: 1, rotation: 0, duration: CLOSE_TIME, ease: 'power3.out', force3D: true },
+            0.15 + (MAX_DELAY - t.delay));
     });
   }
 
@@ -432,6 +454,6 @@ document.addEventListener('click', function(e) {
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="wave-bg.js?v=4"></script>
+<script src="wave-bg.js?v=5"></script>
 </body>
 </html>
